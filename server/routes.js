@@ -190,163 +190,160 @@ const num_songs_counts = async function(req, res) {
 //   });
 // }
 
-// // Route 5: GET /albums
-// const albums = async function(req, res) {
-//   // TODO (TASK 6): implement a route that returns all albums ordered by release date (descending)
-//   // Note that in this case you will need to return multiple albums, so you will need to return an array of objects
-//   connection.query(`SELECT * FROM Albums ORDER BY release_date DESC`, (err, data) => {
-//     if (err || data.length === 0) {
-//       console.log(err);
-//       res.json({});
-//     } else {
-//       res.json(data);
-//     }
-//   });
-// }
+// Route 9: GET /mbti/artists
+const artists_mbti = async function(req, res) {
+  // Return the top n artists for each MBTI. For example, we want to find the 5 most relevant artists for ISTJ.
+  const mbti = req.query.mbti ?? '';
+  const num_artist = req.query.num_artist ?? 5;
 
-// // Route 6: GET /album_songs/:album_id
-// const album_songs = async function(req, res) {
-//   // TODO (TASK 7): implement a route that given an album_id, returns all songs on that album ordered by track number (ascending)
-//   const album_id = req.params.album_id;
-//   connection.query(`SELECT song_id, title, number, duration, plays
-//                     FROM Songs 
-//                     WHERE album_id = ?
-//                     ORDER BY number`,album_id,(err, data) => {
-//     if (err || data.length === 0) {
-//       console.log(err);
-//       res.json({});
-//     } else {
-//       res.json(data);
-//     }
-//   });
+  connection.query(`SELECT ar.artist_id,ar.artist_name,ar.followers,ar.artist_popularity, COUNT(*) as istj_track_count
+                    FROM Artists ar
+                    JOIN Writes w
+                    ON ar.artist_id = w.artist_id
+                    JOIN Tracks_MBTIs tmbti
+                    ON w.track_id = tmbti.track_id
+                    WHERE tmbti.mbti = ?
+                    GROUP BY ar.artist_id,ar.artist_name,ar.followers,ar.artist_popularity
+                    ORDER BY ar.artist_popularity DESC,COUNT(*) DESC
+                    LIMIT ?;`,
+                    [mbti, num_artist] , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      console.log(666);
+      res.json(data);
+    }
+  });
+}
 
-// }
+// Route 10: GET /mbti/albums
+const mbti_albums = async function(req, res) {
+  // Return the top n albums for each MBTI. For example, we want to find the 5 most relevant albums for ISTJ.
+  const mbti = req.query.mbti ?? '';
+  const num_albums = req.query.num_albums ?? 5;
+  connection.query(`SELECT a.album_id,a.album,COUNT(*) as istj_track_count
+                    FROM Albums a JOIN Tracks_MBTIs t
+                    ON a.album_id = t.album_id
+                    WHERE t.mbti = ?
+                    GROUP BY a.album_id, a.album
+                    ORDER BY COUNT(*) DESC, a.album
+                    LIMIT ?;`,
+                    [mbti, num_albums] , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      console.log(666);
+      res.json(data);
+    }
+  });
+}
 
-// /************************
-//  * ADVANCED INFO ROUTES *
-//  ************************/
+// Route 11: GET /similar_songs
+const mbti_songs = async function(req, res) {
+  // Find a random song for each MBTI. For example, we want to find a random song for ISTJ.
+  const mbti = req.query.mbti ?? '';
+  const num_albums = req.query.num_albums ?? 1;
+  connection.query(`WITH track_istj AS (
+                    SELECT track_id
+                    FROM Tracks_MBTIs
+                    WHERE mbti = ?)
+                    # Find a random ISTJ track (song)
+                    SELECT t.track_id,
+                    t.track_name
+                    FROM Tracks t
+                    JOIN track_istj istj
+                    ON t.track_id = istj.track_id
+                    ORDER BY RAND()
+                    LIMIT ?;`,
+                    [mbti, num_albums] , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      console.log(666);
+      res.json(data);
+    }
+  });
+}
 
-// // Route 7: GET /top_songs
-// const top_songs = async function(req, res) {
-//   const page = req.query.page;
-//   // TODO (TASK 8): use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
-//   const pageSize = req.query.page_size ?? 10;
+// Route 12: GET /similar_songs
+const similar_songs = async function(req, res) {
+  // Find a random song for each MBTI. For example, we want to find a random song for ISTJ.
+  const song_name = req.query.mbti ?? 'On My Own';
+  // const num_albums = req.query.num_albums ?? 1;
+  connection.query(`WITH Track_search AS(
+                                SELECT *
+                                FROM Tracks_MBTIs
+                                WHERE track_name = ?),
+                         Track_similar AS(
+                              SELECT t.track_id, t.track_name, t.album_id
+                              FROM Track_search ts, Tracks_MBTIs t
+                              WHERE t.danceability BETWEEN ts.danceability- 0.5 AND
+                              ts.danceability + 0.5 AND
+                              t.energy BETWEEN ts.energy - 0.5 AND
+                              ts.energy + 0.5 AND
+                              t.loudness BETWEEN ts.loudness - 0.5 AND
+                              ts.loudness + 0.5 AND
+                              t.mode BETWEEN ts.mode - 0.5 AND
+                              ts.mode + 0.5 AND
+                              t.speechiness BETWEEN ts.speechiness - 0.5 AND
+                              ts.speechiness + 0.5 AND
+                              t.acousticness BETWEEN ts.acousticness - 0.5 AND
+                              ts.acousticness + 0.5 AND
+                              t.instrumentalness BETWEEN ts.instrumentalness - 0.5 AND
+                              ts.instrumentalness + 0.5 AND
+                              t.liveness BETWEEN ts.liveness - 0.5 AND
+                              ts.liveness + 0.5 AND
+                              t.valence BETWEEN ts.valence - 0.5 AND
+                              ts.valence + 0.5 AND
+                              t.tempo BETWEEN ts.tempo - 0.5 AND
+                              ts.tempo + 0.5
+                              ORDER BY t.track_id
+                              LIMIT 5)
+    SELECT ts1.track_id, ts1.track_name, a.album 
+    FROM Track_similar ts1 
+    JOIN Albums a ON 
+    ts1.album_id = a.album_id;`,
+    [song_name] , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      console.log(666);
+      res.json(data);
+    }
+  });
+}
 
-//   if (!page) {
-//     // TODO (TASK 9)): query the database and return all songs ordered by number of plays (descending)
-//     // Hint: you will need to use a JOIN to get the album title as well
-//     // res.json([]); // replace this with your implementation
-//     connection.query(`SELECT song_id, Songs.title AS title, Songs.album_id AS album_id ,
-//                              Albums.title AS album, plays
-//                              FROM Songs
-//                       JOIN Albums ON Songs.album_id = Albums.album_id
-//                       ORDER BY plays DESC
-//                       `,(err, data) => {
-//       if (err || data.length === 0) {
-//         console.log(err);
-//         res.json({});
-//       } else {
-//         res.json(data);
-//       }
-//     });
-
-//   } else {
-//     // TODO (TASK 10): reimplement TASK 9 with pagination
-//     // Hint: use LIMIT and OFFSET (see https://www.w3schools.com/php/php_mysql_select_limit.asp)
-//     connection.query(`SELECT song_id, Songs.title AS title, Songs.album_id AS album_id ,
-//                              Albums.title AS album, plays
-//                              FROM Songs
-//                       JOIN Albums ON Songs.album_id = Albums.album_id
-//                       ORDER BY plays DESC
-//                       LIMIT ? 
-//                       OFFSET ?`,[pageSize-0, (page - 1)*pageSize],(err, data) => {
-//       if (err || data.length === 0) {
-//         console.log(err);
-//         res.json({});
-//       } else {
-//         res.json(data);
-//       }
-//     });
-//   }
-// }
-
-// // Route 8: GET /top_albums
-// const top_albums = async function(req, res) {
-//   // TODO (TASK 11): return the top albums ordered by aggregate number of plays of all songs on the album (descending), with optional pagination (as in route 7)
-//   // Hint: you will need to use a JOIN and aggregation to get the total plays of songs in an album
-//   const page = req.query.page;
-//   // TODO (TASK 8): use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
-//   const pageSize = req.query.page_size ?? 10;
-
-//   if (!page) {
-//     connection.query(`SELECT Albums.album_id AS album_id, Albums.title AS title, SUM(plays) AS plays
-//                       FROM Songs
-//                       JOIN Albums ON Songs.album_id = Albums.album_id
-//                       GROUP BY album_id
-//                       ORDER BY plays DESC
-//                       `,(err, data) => {
-//       if (err || data.length === 0) {
-//         console.log(err);
-//         res.json({});
-//       } else {
-//         res.json(data);
-//       }
-//     });
-//   }
-//   else{
-//     connection.query(`SELECT Albums.album_id AS album_id, Albums.title AS title, SUM(plays) AS plays
-//                       FROM Songs
-//                       JOIN Albums ON Songs.album_id = Albums.album_id
-//                       GROUP BY album_id
-//                       ORDER BY plays DESC
-//                       LIMIT ? 
-//                       OFFSET ?
-//                       `,[pageSize -0, (page - 1)*pageSize],(err, data) => {
-//       if (err || data.length === 0) {
-//         console.log(err);
-//         res.json({});
-//       } else {
-//         res.json(data);
-//       }
-//     });
-//   }
-// }
-
-// // Route 9: GET /search_albums
-// const search_songs = async function(req, res) {
-//   // TODO (TASK 12): return all songs that match the given search query with parameters defaulted to those specified in API spec ordered by title (ascending)
-//   // Some default parameters have been provided for you, but you will need to fill in the rest
-//   const title = req.query.title ?? '';
-//   const durationLow = req.query.duration_low ?? 60;
-//   const durationHigh = req.query.duration_high ?? 660;
-//   const playLow = req.query.play_low ?? 0;
-//   const playHigh = req.query.play_high ?? 1100000000;
-//   const danceabilityLow = req.query.danceability_low ?? 0;
-//   const danceabilityHigh = req.query.danceability_high ?? 1;
-//   const energyLow = req.query.energy_low ?? 0;
-//   const energyHigh = req.query.energy_high ?? 1;
-//   const valenceLow = req.query.valence_low ?? 0;
-//   const valenceHigh = req.query.valence_high ?? 1;
-
-//   const explicit = req.query.explicit === 'true' ? 1 : 0;
-
-//   connection.query(`SELECT * FROM Songs WHERE title LIKE '%` + title +`%' AND duration >= ? AND duration <= ? 
-//                       AND plays >= ? AND plays <= ? AND danceability >= ? AND danceability <= ?
-//                       AND energy >= ? AND energy <= ?
-//                       AND valence >= ?
-//                       AND valence <= ?
-//                       AND explicit <= ?
-//                       ORDER BY title`,[durationLow, durationHigh,playLow,playHigh,
-//                         danceabilityLow,danceabilityHigh,energyLow,
-//                         energyHigh,valenceLow,valenceHigh, explicit],(err, data) => {
-//       if (err || data.length === 0) {
-//         console.log(err);
-//         res.json({});
-//       } else {
-//         res.json(data);
-//       }
-//     });
-// }
+// Route 13: GET mbti/song_counts
+const song_counts = async function(req, res) {
+  // Count the number of songs for each MBTI type for each artist.
+  // const num_albums = req.query.num_albums ?? 1;
+  connection.query(`SELECT a.artist_id,
+                      a.artist_name,
+                      t.mbti,
+                      COUNT(*) as song_count
+                      FROM Artists a
+                      JOIN Writes w
+                      ON a.artist_id = w.artist_id
+                      JOIN Tracks_MBTIs t
+                      ON w.track_id = t.track_id
+                      GROUP BY a.artist_id,
+                      a.artist_name,
+                      t.mbti
+                      ORDER BY a.artist_id,
+                      t.mbti;`, (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      console.log(666);
+      res.json(data);
+    }
+  });
+}
 
 module.exports = {
   artist,
@@ -355,10 +352,9 @@ module.exports = {
   num_songs_artist,
   num_songs_counts,
   albums,
-  // similar_artists,
-  // artists_songs_mbtis
-  // album_songs,
-  // top_songs,
-  // top_albums,
-  // search_songs,
+  artists_mbti,
+  mbti_albums,
+  mbti_songs,
+  similar_songs,
+  song_counts,
 }
