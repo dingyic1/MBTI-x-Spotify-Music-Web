@@ -278,6 +278,106 @@ const song_counts = async function (req, res) {
   });
 }
 
+// Route 12: GET /album/mbti_song_counts
+// Count the number of songs for each MBTI type for each album
+
+const album_mbti_song_counts = async function (req, res) {
+  const query = `
+    SELECT a.album_id,
+        a.album,
+        tmf.mbti,
+        COUNT(*) as song_count
+    FROM Albums a
+    JOIN Tracks t ON a.album_id = t.album_id
+    JOIN Tracks_MBTIs tmf ON t.track_id = tmf.track_id
+    GROUP BY a.album_id, a.album, tmf.mbti
+    ORDER BY a.album_id, tmf.mbti;
+  `;
+
+  connection.query(query, (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+};
+
+// Route 13: GET /artist/mbti_songs
+// Show all artist's songs, corresponding MBTI type for each song, 
+// and release year for each song, ordered by release year
+const artist_mbti_songs = async function (req, res) {
+  const query = `
+    SELECT a.artist_name,
+        t.track_name, tmf.mbti,
+        t.release_date as release_year
+    FROM Artists a
+    JOIN Writes w ON a.artist_id = w.artist_id
+    JOIN Tracks t ON w.track_id = t.track_id
+    JOIN Tracks_MBTIs tmf ON t.track_id = tmf.track_id
+    ORDER BY t.release_date;
+  `;
+
+  connection.query(query, (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+};
+
+// Route 14: GET /artist/similar
+// Search for an artist and return similar artists 
+// based on the features of the songs written by that artist.  
+const similar_artists = async function (req, res) {
+  const artist_name = req.query.artist_name;
+
+  const query = `
+    WITH artist_search AS (
+      SELECT mode, liveness, loudness, danceability,
+          instrumentalness, energy, speechiness,
+          acousticness, valence, tempo
+      FROM Writes w JOIN Artists a ON a.artist_id = w.artist_id
+          JOIN Tracks t ON w.track_id = t.track_id
+      WHERE a.artist_name = '${artist_name}'
+    ),
+    Artist_similar AS (
+      SELECT t.track_id
+      FROM Artist_search as, Tracks t
+      WHERE t.danceability BETWEEN as.danceability - 0.5 AND as.danceability + 0.5
+        AND t.energy BETWEEN as.energy - 0.5 AND as.energy + 0.5
+        AND t.loudness BETWEEN as.loudness - 0.5 AND as.loudness + 0.5
+        AND t.mode BETWEEN as.mode - 0.5 AND as.mode + 0.5
+        AND t.speechiness BETWEEN as.speechiness - 0.5 AND as.speechiness + 0.5
+        AND t.acousticness BETWEEN as.acousticness - 0.5 AND as.acousticness + 0.5
+        AND t.instrumentalness BETWEEN as.instrumentalness - 0.5 AND as.instrumentalness + 0.5
+        AND t.liveness BETWEEN as.liveness - 0.5 AND as.liveness + 0.5
+        AND t.valence BETWEEN as.valence - 0.5 AND as.valence + 0.5
+        AND t.tempo BETWEEN as.tempo - 0.5 AND as.tempo + 0.5
+    )
+    SELECT a1.artist_name
+    FROM Writes w1
+    JOIN Artists a1 ON a1.artist_id = w1.artist_id
+    JOIN Artist_similar as1 ON w1.track_id = as1.track_id
+    ORDER BY a1.artist_id
+    LIMIT 5;
+  `;
+
+  connection.query(query, (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+};
+
+
+
 module.exports = {
   artist,
   song,
