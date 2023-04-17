@@ -14,11 +14,10 @@ connection.connect((err) => err && console.log(err));
 
 
 // Route 1: GET /song/:song_id
-const song = async function(req, res) {
-  // TODO (TASK 4): implement a route that given a song_id, returns all information about the song
-  // Most of the code is already written for you, you just need to fill in the queryx
+const song = async function (req, res) {
+  //implement a route that given a song_id, returns all information about the song
   const song_id = req.params.song_id;
-  connection.query(`SELECT * FROM Tracks WHERE track_id = ? `, song_id , (err, data) => {
+  connection.query(`SELECT * FROM Tracks WHERE track_id = ? `, song_id, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json({});
@@ -29,11 +28,11 @@ const song = async function(req, res) {
 }
 
 // Route 2: GET /album/:album_id
-const album = async function(req, res) {
-  // TODO (TASK 5): implement a route that given a album_id, returns all information about the album
+const album = async function (req, res) {
+  //implement a route that given a album_id, returns all information about the album
   const album_id = req.params.album_id;
-  console.log(req.params.song_id);
-  connection.query(`SELECT * FROM Albums WHERE album_id = ? `, album_id , (err, data) => {
+  console.log(req.params.album_id);
+  connection.query(`SELECT * FROM Albums WHERE album_id = ? `, album_id, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json({});
@@ -44,11 +43,11 @@ const album = async function(req, res) {
 }
 
 // Route 3: GET /album/:album_id
-const artist = async function(req, res) {
-  // TODO (TASK 5): implement a route that given a album_id, returns all information about the album
+const artist = async function (req, res) {
+  //implement a route that given a album_id, returns all information about the album
   const artist_id = req.params.artist_id;
   console.log(req.params.artist_id);
-  connection.query(`SELECT * FROM Artists WHERE artist_id = ? `, artist_id , (err, data) => {
+  connection.query(`SELECT * FROM Artists WHERE artist_id = ? `, artist_id, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json({});
@@ -59,8 +58,8 @@ const artist = async function(req, res) {
 }
 
 // Route 4: GET /albums
-const albums = async function(req, res) {
-  // Show artist information along with number of songs
+const albums = async function (req, res) {
+  // Show all albums information
   connection.query(`SELECT *
                     FROM Albums; `, (err, data) => {
     if (err || data.length === 0) {
@@ -73,7 +72,7 @@ const albums = async function(req, res) {
 }
 
 // Route 5: GET /artist/songs_count/:artist_id
-const num_songs_artist = async function(req, res) {
+const num_songs_artist = async function (req, res) {
   // Show artist information along with number of songs
   const artist_id = req.params.artist_id;
   console.log(req.params.song_id);
@@ -87,7 +86,7 @@ const num_songs_artist = async function(req, res) {
                     JOIN Tracks t
                     ON w.track_id = t.track_id
                     WHERE a.artist_id = ?
-                    GROUP BY a.artist_id; `, artist_id , (err, data) => {
+                    GROUP BY a.artist_id; `, artist_id, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json({});
@@ -100,7 +99,7 @@ const num_songs_artist = async function(req, res) {
 
 
 // Route 6: GET /artists/song_counts
-const num_songs_counts = async function(req, res) {
+const num_songs_counts = async function (req, res) {
   // Show artist information along with number of songs
   connection.query(`SELECT a.artist_name,
                     a.artist_popularity,
@@ -124,74 +123,8 @@ const num_songs_counts = async function(req, res) {
 }
 
 
-// // Route 7: GET /artists/similar/:artist_name
-// const similar_artists = async function(req, res) {
-//   //Search for an artist and return similar artists based on the features of the songs written by that artist.
-//   const artist_name = req.params.artist_name;
-//   connection.query(`WITH artist_search AS(
-//                     SELECT mode, liveness, loudness, danceability,
-//                     instrumentalness, energy, speechiness,
-//                     acousticness, valence, tempo
-//                     FROM Writes w JOIN Artists a ON a.artist_id = w.artist_id
-//                     JOIN Tracks t ON w.track_id=t.track_id
-//                     WHERE a.artist_name = ?),
-//                     Artist_similar AS(
-//                     SELECT t.track_id
-//                     FROM Artist_search as, Tracks t
-//                     WHERE t.danceability BETWEEN as.danceability - 0.5 AND
-//                     as.danceability + 0.5 AND
-//                     t.energy BETWEEN as.energy - 0.5 AND
-//                     as.energy + 0.5 AND
-//                     t.loudness BETWEEN as.loudness - 0.5 AND
-//                     as.loudness + 0.5 AND
-//                     t.mode BETWEEN as.mode - 0.5 AND
-//                     as.mode + 0.5 AND
-//                     t.speechiness BETWEEN as.speechiness - 0.5 AND
-//                     as.speechiness + 0.5 AND
-//                     t.acousticness BETWEEN as.acousticness - 0.5 AND
-//                     as.acousticness + 0.5 AND
-//                     t.instrumentalness BETWEEN as.instrumentalness - 0.5 AND
-//                     as.instrumentalness + 0.5 AND
-//                     t.liveness BETWEEN as.liveness - 0.5 AND
-//                     as.liveness + 0.5 AND
-//                     t.valence BETWEEN as.valence - 0.5 AND
-//                     as.valence + 0.5 AND
-//                     t.tempo BETWEEN as.tempo - 0.5 AND
-//                     as.tempo + 0.5) `, artist_name , (err, data) => {
-//     if (err || data.length === 0) {
-//       console.log(err);
-//       res.json({});
-//     } else {
-//       res.json(data);
-//     }
-//   });
-// }
-
-// // Route 8: GET /artists/songs/mbtis
-// const artists_songs_mbtis = async function(req, res) {
-//   //Show all artist's songs, corresponding MBTI type for each song, and release year for each song, ordered by release year
-//   connection.query(`SELECT a.artist_name,
-//                     a.artist_popularity,
-//                     a.followers,
-//                     COUNT(t.track_id) AS song_count
-//                     FROM Artists a
-//                     JOIN Writes w
-//                     ON a.artist_id = w.artist_id
-//                     JOIN Tracks t
-//                     ON w.track_id = t.track_id
-//                     GROUP BY a.artist_id;
-//   `, (err, data) => {
-//     if (err || data.length === 0) {
-//       console.log(err);
-//       res.json({});
-//     } else {
-//       res.json(data);
-//     }
-//   });
-// }
-
-// Route 9: GET /mbti/artists
-const artists_mbti = async function(req, res) {
+// Route 7: GET /mbti/artists
+const artists_mbti = async function (req, res) {
   // Return the top n artists for each MBTI. For example, we want to find the 5 most relevant artists for ISTJ.
   const mbti = req.query.mbti ?? '';
   const num_artist = req.query.num_artist ?? 5;
@@ -206,19 +139,19 @@ const artists_mbti = async function(req, res) {
                     GROUP BY ar.artist_id,ar.artist_name,ar.followers,ar.artist_popularity
                     ORDER BY ar.artist_popularity DESC,COUNT(*) DESC
                     LIMIT ?;`,
-                    [mbti, num_artist] , (err, data) => {
-    if (err || data.length === 0) {
-      console.log(err);
-      res.json({});
-    } else {
-      console.log(666);
-      res.json(data);
-    }
-  });
+    [mbti, num_artist], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        console.log(666);
+        res.json(data);
+      }
+    });
 }
 
-// Route 10: GET /mbti/albums
-const mbti_albums = async function(req, res) {
+// Route 8: GET /mbti/albums
+const mbti_albums = async function (req, res) {
   // Return the top n albums for each MBTI. For example, we want to find the 5 most relevant albums for ISTJ.
   const mbti = req.query.mbti ?? '';
   const num_albums = req.query.num_albums ?? 5;
@@ -229,19 +162,19 @@ const mbti_albums = async function(req, res) {
                     GROUP BY a.album_id, a.album
                     ORDER BY COUNT(*) DESC, a.album
                     LIMIT ?;`,
-                    [mbti, num_albums] , (err, data) => {
-    if (err || data.length === 0) {
-      console.log(err);
-      res.json({});
-    } else {
-      console.log(666);
-      res.json(data);
-    }
-  });
+    [mbti, num_albums], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        console.log(666);
+        res.json(data);
+      }
+    });
 }
 
-// Route 11: GET /similar_songs
-const mbti_songs = async function(req, res) {
+// Route 9: GET /similar_songs
+const mbti_songs = async function (req, res) {
   // Find a random song for each MBTI. For example, we want to find a random song for ISTJ.
   const mbti = req.query.mbti ?? '';
   const num_albums = req.query.num_albums ?? 1;
@@ -257,20 +190,20 @@ const mbti_songs = async function(req, res) {
                     ON t.track_id = istj.track_id
                     ORDER BY RAND()
                     LIMIT ?;`,
-                    [mbti, num_albums] , (err, data) => {
-    if (err || data.length === 0) {
-      console.log(err);
-      res.json({});
-    } else {
-      console.log(666);
-      res.json(data);
-    }
-  });
+    [mbti, num_albums], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        console.log(666);
+        res.json(data);
+      }
+    });
 }
 
-// Route 12: GET /similar_songs
-const similar_songs = async function(req, res) {
-  // Find a random song for each MBTI. For example, we want to find a random song for ISTJ.
+// Route 10: GET /similar_songs
+const similar_songs = async function (req, res) {
+  // Search a song and return similar song recommendations
   const song_name = req.query.mbti ?? 'On My Own';
   // const num_albums = req.query.num_albums ?? 1;
   connection.query(`WITH Track_search AS(
@@ -306,19 +239,19 @@ const similar_songs = async function(req, res) {
     FROM Track_similar ts1 
     JOIN Albums a ON 
     ts1.album_id = a.album_id;`,
-    [song_name] , (err, data) => {
-    if (err || data.length === 0) {
-      console.log(err);
-      res.json({});
-    } else {
-      console.log(666);
-      res.json(data);
-    }
-  });
+    [song_name], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        console.log(666);
+        res.json(data);
+      }
+    });
 }
 
-// Route 13: GET mbti/song_counts
-const song_counts = async function(req, res) {
+// Route 11: GET mbti/song_counts
+const song_counts = async function (req, res) {
   // Count the number of songs for each MBTI type for each artist.
   // const num_albums = req.query.num_albums ?? 1;
   connection.query(`SELECT a.artist_id,
