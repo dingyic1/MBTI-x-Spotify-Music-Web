@@ -17,7 +17,7 @@ connection.connect((err) => err && console.log(err));
 const song = async function (req, res) {
   //implement a route that given a song_id, returns all information about the song
   const song_id = req.params.song_id;
-  connection.query(`SELECT * FROM Tracks WHERE track_id = ? `, song_id, (err, data) => {
+  connection.query(`SELECT * FROM Tracks_MBTIs WHERE track_id = ? `, song_id, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json({});
