@@ -42,7 +42,7 @@ const album = async function (req, res) {
   });
 }
 
-// Route 3: GET /album/:album_id
+// Route 3: GET /artist/:artist_id
 const artist = async function (req, res) {
   //implement a route that given a album_id, returns all information about the album
   const artist_id = req.params.artist_id;
