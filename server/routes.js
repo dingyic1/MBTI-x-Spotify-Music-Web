@@ -201,7 +201,7 @@ const mbti_songs = async function (req, res) {
     });
 }
 
-// Route 10: GET song/similar_songs
+// Route 10: GET /search_similar_songs
 const similar_songs = async function (req, res) {
   // Search a song and return similar song recommendations
   const song_name = req.query.mbti ?? 'On My Own';
