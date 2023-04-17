@@ -173,7 +173,7 @@ const mbti_albums = async function (req, res) {
     });
 }
 
-// Route 9: GET /similar_songs
+// Route 9: GET mbti/similar_songs
 const mbti_songs = async function (req, res) {
   // Find a random song for each MBTI. For example, we want to find a random song for ISTJ.
   const mbti = req.query.mbti ?? '';
@@ -201,7 +201,7 @@ const mbti_songs = async function (req, res) {
     });
 }
 
-// Route 10: GET /similar_songs
+// Route 10: GET song/similar_songs
 const similar_songs = async function (req, res) {
   // Search a song and return similar song recommendations
   const song_name = req.query.mbti ?? 'On My Own';
