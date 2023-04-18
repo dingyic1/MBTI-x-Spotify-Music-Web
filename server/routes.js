@@ -199,7 +199,7 @@ const mbti_albums = async function (req, res) {
 const mbti_songs = async function (req, res) {
   // Given a MBTI, return a similar song for that MBTI. For example, we want to find a random song for ISTJ.
   const mbti = req.query.mbti ?? "";
-  const num_albums = req.query.num_albums ?? 1;
+  const num_songs = req.query.num_songs ?? 1;
   connection.query(
     `WITH track_istj AS (
                     SELECT track_id
@@ -213,7 +213,7 @@ const mbti_songs = async function (req, res) {
                     ON t.track_id = istj.track_id
                     ORDER BY RAND()
                     LIMIT ?;`,
-    [mbti, num_albums],
+    [mbti, num_songs],
     (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
