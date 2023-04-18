@@ -226,10 +226,10 @@ const mbti_songs = async function (req, res) {
   );
 };
 
-// Route 10: GET /search_similar_songs
+// Route 10: GET /similar_songs
 const similar_songs = async function (req, res) {
   // Given a MBTI, return all similar songs for that MBTI
-  const song_name = req.query.mbti ?? "On My Own";
+  const song_name = req.query.name ?? "On My Own";
   // const num_albums = req.query.num_albums ?? 1;
   connection.query(
     `WITH Track_search AS(
@@ -417,4 +417,7 @@ module.exports = {
   mbti_songs,
   similar_songs,
   song_counts,
+  album_mbti_song_counts,
+  artist_mbti_songs,
+  similar_artists,
 };

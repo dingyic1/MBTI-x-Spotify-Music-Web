@@ -24,9 +24,9 @@ app.get('/mbti/albums', routes.mbti_albums);
 app.get('/mbti/songs', routes.mbti_songs);
 app.get('/similar_songs', routes.similar_songs);
 app.get('/mbti/song_counts', routes.song_counts);
-app.get('/album/mbti_song_counts', routes.album_mbti_song_counts);
-app.get('/artist/mbti_songs', routes.artist_mbti_songs);
-app.get('/artist/similar', routes.similar_artists);
+app.get('/albums/mbti_song_counts', routes.album_mbti_song_counts);
+app.get('/artists/mbti_songs', routes.artist_mbti_songs);
+app.get('/artists/similar', routes.similar_artists);
 
 
 app.listen(config.server_port, () => {
