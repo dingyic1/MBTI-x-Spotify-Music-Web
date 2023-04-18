@@ -100,8 +100,7 @@ const num_songs_artist = async function (req, res) {
                     ON a.artist_id = w.artist_id
                     JOIN Tracks t
                     ON w.track_id = t.track_id
-                    WHERE a.artist_id = ?
-                    GROUP BY a.artist_id; `,
+                    WHERE a.artist_id = ?; `,
     artist_id,
     (err, data) => {
       if (err || data.length === 0) {
@@ -126,8 +125,7 @@ const num_songs_counts = async function (req, res) {
                     JOIN Writes w
                     ON a.artist_id = w.artist_id
                     JOIN Tracks t
-                    ON w.track_id = t.track_id
-                    GROUP BY a.artist_id;
+                    ON w.track_id = t.track_id;
   `,
     (err, data) => {
       if (err || data.length === 0) {
