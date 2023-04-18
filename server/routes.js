@@ -405,6 +405,63 @@ const similar_artists = async function (req, res) {
   });
 };
 
+// Route 15: GET /search_songs
+// Given an artist_name, return similar artists based on the features of the songs written by that artist.
+const search_songs = async function (req, res) {
+  const mbti = req.query.mbti ?? "";
+  const name = req.query.name ?? "";
+  const explicit = req.query.explicit === "true" ? 1 : 0;
+  const mode = req.query.mode === "true" ? 1 : 0;
+  const durationLow = req.query.duration_low ?? 60;
+  const durationHigh = req.query.duration_high ?? 660;
+  const danceabilityLow = req.query.danceability_low ?? 0;
+  const danceabilityHigh = req.query.danceability_high ?? 1;
+  const energyLow = req.query.energy_low ?? 0;
+  const energyHigh = req.query.energy_high ?? 1;
+  const loudnessLow = req.query.loudness_low ?? -60;
+  const loudnessHigh = req.query.loudness_high ?? 6;
+  const speechinessLow = req.query.speechiness_low ?? 0;
+  const speechinessHigh = req.query.speechiness_high ?? 1;
+  const acousticnessLow = req.query.acousticness_low ?? 0;
+  const acousticnessHigh = req.query.acousticness_high ?? 1;
+  const instrumentalnessLow = req.query.instrumentalness_low ?? 0;
+  const instrumentalnessHigh = req.query.instrumentalness_high ?? 1;
+  const livenessLow = req.query.liveness_low ?? 0;
+  const livenessHigh = req.query.liveness_high ?? 1;
+  const valenceLow = req.query.valence_low ?? 0;
+  const valenceHigh = req.query.valence_high ?? 1;
+  const tempoLow = req.query.tempo_low ?? 0;
+  const tempoHigh = req.query.tempo_high ?? 247;
+
+  connection.query(
+    `
+    SELECT * FROM Tracks
+    WHERE mbti LIKE ‘%${mbti}%’
+    AND track_name LIKE ‘%${name}%’;
+    AND explicit <= ${explicit}
+    AND mode <= ${mode}
+    AND duration_ms BETWEEN ${durationLow} AND ${durationHigh}
+    AND danceability BETWEEN ${danceabilityLow} AND ${danceabilityHigh}
+    AND energy BETWEEN ${energyLow} AND ${energyHigh}
+    AND loudness BETWEEN ${loudnessLow} AND ${loudnessHigh}
+    AND speechiness BETWEEN ${speechinessLow} AND ${speechinessHigh}
+    AND acousticness BETWEEN ${acousticnessLow} and ${acousticnessHigh}
+    AND instrumentalness BETWEEN ${instrumentalnessLow} AND ${instrumentalnessHigh}
+    AND liveness BETWEEN ${livenessLow} AND ${livenessHigh}
+    AND valence BETWEEN ${valenceLow} AND ${valenceHigh}
+    AND tempo BETWEEN ${tempoLow} and ${tempoHigh}
+  `,
+    (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    }
+  );
+};
+
 module.exports = {
   artist,
   song,
@@ -420,4 +477,5 @@ module.exports = {
   album_mbti_song_counts,
   artist_mbti_songs,
   similar_artists,
+  search_songs,
 };
