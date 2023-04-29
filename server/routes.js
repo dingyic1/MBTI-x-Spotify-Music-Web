@@ -195,11 +195,11 @@ const mbti_albums = async function (req, res) {
   );
 };
 
-// Route 9: GET /mbti/similar_songs
+// Route 9: GET /recommend
 const mbti_songs = async function (req, res) {
   // Given a MBTI, return a similar song for that MBTI. For example, we want to find a random song for ISTJ.
   const mbti = req.query.mbti ?? "";
-  const num_songs = req.query.num_songs ?? 1;
+  const num_songs = req.query.num_songs ?? 5;
   connection.query(
     `WITH track_istj AS (
                     SELECT track_id
