@@ -39,7 +39,7 @@ export default function AlbumInfoPage() {
             <TableRow>
               <TableCell key='#'>#</TableCell>
               <TableCell key='Title'>Title</TableCell>
-              <TableCell key='Plays'>Plays</TableCell>
+              <TableCell key='Release Date'>Release Date</TableCell>
               <TableCell key='Duration'>Duration</TableCell>
             </TableRow>
           </TableHead>
@@ -53,7 +53,7 @@ export default function AlbumInfoPage() {
                       </NavLink>
                     </TableCell>
                     <TableCell key='Release Date'>{songData[idx].release_date}</TableCell>
-                    <TableCell key='Duration'>{formatDuration(songData[idx].duration)}</TableCell>
+                    <TableCell key='Duration'>{formatDuration(songData[idx].duration_ms)}</TableCell>
                 </TableRow>
             )}
           </TableBody>
