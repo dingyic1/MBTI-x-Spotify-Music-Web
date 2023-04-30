@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  Divider,
-  Link,
-  Typography,
-  Box,
-  TextField,
-  Button,
-  Grid,
-} from "@mui/material";
+import { Container, TextField, Button } from "@mui/material";
 import "../styles/stylesheet.css";
 
 function EntryPage() {

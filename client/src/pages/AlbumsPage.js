@@ -13,18 +13,25 @@ export default function AlbumsPage() {
     fetch(`http://${config.server_host}:${config.server_port}/albums`)
       .then((res) => res.json())
       .then((resJson) => setAlbums(resJson));
-  }, [])
-  
+  }, []);
+
   const albumColumns = [
     {
-      field: 'album',
-      headerName: 'Album_name',
-      
-      renderCell: (row) => <NavLink to={`/album/${row.album_id}`} onClick={() => setSelectedAlbumId(row.album_id)}>{row.album}</NavLink> // A Link component is used just for formatting purposes // A Link component is used just for formatting purposes
+      field: "album",
+      headerName: "Album_name",
+
+      renderCell: (row) => (
+        <NavLink
+          to={`/album/${row.album_id}`}
+          onClick={() => setSelectedAlbumId(row.album_id)}
+        >
+          {row.album}
+        </NavLink>
+      ),
     },
     {
-      field: 'album_id',
-      headerName: 'Album_ID',
+      field: "album_id",
+      headerName: "Album_ID",
     },
   ];
 
@@ -32,8 +39,10 @@ export default function AlbumsPage() {
     <Container>
       <h1>Albums</h1>
       <Divider />
-      <LazyTable route={`http://${config.server_host}:${config.server_port}/albums`} columns={albumColumns} />
-
+      <LazyTable
+        route={`http://${config.server_host}:${config.server_port}/albums`}
+        columns={albumColumns}
+      />
     </Container>
   );
 }
