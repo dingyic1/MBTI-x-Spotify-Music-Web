@@ -9,10 +9,10 @@ export default function ArtistsPage() {
   const [similarArtists, setSimilarArtists] = useState([]);
   const [error, setError] = useState(null);
 
-  const searchSimilarArtists = async () => {
+  async function searchSimilarArtists() {
     try {
       const response = await fetch(
-        `${config.API_URL}/artists/similar?artist_name=${artistName}`
+        `${config.server_host}:${config.server_port}/artists/similar`
       );
       if (!response.ok) {
         throw new Error("Error fetching data from the server.");
@@ -24,12 +24,12 @@ export default function ArtistsPage() {
       console.error("Error fetching similar artists:", error.message);
       setError(error.message);
     }
-  };
+  }
 
-  const handleSearchSubmit = (e) => {
+  function handleSearchSubmit(e) {
     e.preventDefault();
     searchSimilarArtists();
-  };
+  }
 
   return (
     <Container>
@@ -52,7 +52,11 @@ export default function ArtistsPage() {
           <h2>Similar Artists:</h2>
           <ul>
             {similarArtists.map((artist, index) => (
-              <li key={index}>{artist.artist_name}</li>
+              <li key={index}>
+                <NavLink to={`/artist/${artist.artist_id}`}>
+                  {artist.artist_name}
+                </NavLink>
+              </li>
             ))}
           </ul>
         </Box>

@@ -71,18 +71,40 @@ const artist = async function (req, res) {
 // Route 4: GET /albums
 const albums = async function (req, res) {
   // Show all albums information
-  connection.query(
-    `SELECT *
-                    FROM Albums; `,
-    (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json({});
-      } else {
-        res.json(data);
+  const page = req.query.page;
+  const pageSize = req.query.page_size ?? 10;
+  if (!page) {
+    connection.query(
+      `SELECT *
+        FROM Albums; `,
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
       }
-    }
-  );
+    );
+
+  }
+  else{
+    connection.query(
+      `SELECT *
+        FROM Albums
+        LIMIT ? 
+        OFFSET ?; `,[pageSize - 0, (page - 1) * pageSize],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+      }
+    );
+  }
+  
 };
 
 // Route 5: GET /artist/songs_count/:artist_id
@@ -519,6 +541,28 @@ const search_songs = async function (req, res) {
   );
 };
 
+// Route 16: GET /album_songs/:album_id
+const album_songs = async function (req, res) {
+  // Given a MBTI, return a similar song for that MBTI. For example, we want to find a random song for ISTJ.
+  const album_id = req.params.album_id;
+  connection.query(
+    `SELECT * FROM  Albums
+     JOIN Tracks_MBTIs ON Tracks_MBTIs.album_id=Albums.album_id
+     WHERE Albums.album_id= ?
+     ORDER BY track_number;`,
+    [album_id],
+    (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        console.log(666);
+        res.json(data);
+      }
+    }
+  );
+};
+
 module.exports = {
   artist,
   song,
@@ -535,5 +579,7 @@ module.exports = {
   artist_mbti_songs,
   similar_artists,
   search_songs,
+  album_songs,
 };
+
 

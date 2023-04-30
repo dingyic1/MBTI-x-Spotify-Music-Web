@@ -1,0 +1,18 @@
+.custom-font {
+    font-family: 'Sigmar', cursive;
+}
+.navbar {
+  font-family: 'Sigmar', cursive;
+  text-decoration: none;
+  color: #fff;
+  font-size: 30px
+}
+
+.entry-page {
+  margin-top: 2%;
+}
+
+.welcome {
+  font-family: 'Sigmar', cursive;
+  font-size: 100px;
+}
