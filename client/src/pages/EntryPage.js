@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Container, Divider, Link, Typography, Box, TextField, Button, Grid } from "@mui/material";
 
 function EntryPage() {
   const [mbti, setMbti] = useState('');
@@ -14,15 +15,46 @@ function EntryPage() {
     setMbti(event.target.value);
   };
 
-  return ( 
-    <form onSubmit={handleSubmit}>
-      <h1>Welcome to the MBTI x Music system !</h1>
-      <label>
-        MBTI Type:
-        <input type="text" value={mbti} onChange={handleChange} />
-      </label>
-      <button type="submit">Submit</button>
-    </form>
+  return (
+    <Container>
+      <Box sx={{ display: 'flex' }}>
+        <Grid container spacing={2}>
+          <Grid item md={8}>
+            <Box>
+              <form onSubmit={handleSubmit}>
+                <Typography variant="h3" gutterBottom>
+                  Welcome to the MBTI x Music system!
+                </Typography>
+                <TextField
+                  label="MBTI Type"
+                  variant="outlined"
+                  value={mbti}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <Box sx={{ pt: 2 }}>
+                  <Button variant="contained" type="submit">
+                    Submit
+                  </Button>
+                </Box>
+              </form>
+            </Box>
+          </Grid>
+          <Grid item md={4}>
+            <Box sx={{ bgcolor: 'primary.light', p: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                About MBTI
+              </Typography>
+              <Typography variant="body1">
+                The Myers-Briggs Type Indicator (MBTI) is a personality assessment tool used to measure personality
+                traits and preferences. It is based on Carl Jung's theory of psychological types and is widely used in
+                business, education, and other fields to improve communication and team dynamics.
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
   );
 }
 

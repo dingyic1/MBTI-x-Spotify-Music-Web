@@ -15,9 +15,15 @@ app.use(
 
 //API used in home page
 app.get("/homepage/:mbti/recommend", routes.mbti_songs);
+app.get("/:mbti/artist_counts", routes.song_counts);
+app.get("/:mbti/album_counts", routes.album_mbti_song_counts);
+app.get("/similar_songs", routes.similar_songs);
 
-
+//SongInfoPage
 app.get("/song/:song_id", routes.song);
+
+
+
 app.get("/album/:album_id", routes.album);
 app.get("/artist/:artist_id", routes.artist);
 app.get("/artist/songs_count/:artist_id", routes.num_songs_artist);
@@ -28,9 +34,9 @@ app.get("/albums", routes.albums);
 app.get("/mbti/artists", routes.artists_mbti);
 app.get("/mbti/albums", routes.mbti_albums);
 
-app.get("/similar_songs", routes.similar_songs);
-app.get("/mbti/song_counts", routes.song_counts);
-app.get("/albums/mbti_song_counts", routes.album_mbti_song_counts);
+
+
+
 app.get("/artists/mbti_songs", routes.artist_mbti_songs);
 app.get("/artists/similar", routes.similar_artists);
 app.get("/search_songs", routes.search_songs);

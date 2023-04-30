@@ -10,6 +10,7 @@ import AlbumsPage from "./pages/AlbumsPage";
 import SongsPage from "./pages/SongsPage";
 import AlbumInfoPage from "./pages/AlbumInfoPage";
 import ArtistsPage from "./pages/ArtistsPage";
+import SongInfoPage from "./pages/SongInfoPage";
 
 
 // createTheme enables you to customize the look and feel of your app past the default
@@ -21,11 +22,11 @@ export const theme = createTheme({
   },
 });
 
-function AppNavBar() {
-  const { pathname } = useLocation();
-  const isEntryPage = pathname === '/';
-  return isEntryPage ? null : <NavBar />;
-}
+// function AppNavBar() {
+//   const { pathname } = useLocation();
+//   const isEntryPage = pathname === '/';
+//   return isEntryPage ? null : <NavBar />;
+// }
 
 // App is the root component of our application and as children contain all our pages
 // We use React Router's BrowserRouter and Routes components to define the pages for
@@ -36,14 +37,15 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <AppNavBar/>
+        <NavBar/>
         <Routes>
           <Route path="/" element={<EntryPage />} /> 
           <Route path="/homepage/:mbti" element={<HomePage/>} />
-          {/* <Route path="/albums" element={<AlbumsPage />} />
+          <Route path="/albums" element={<AlbumsPage />} />
           <Route path="/albums/:album_id" element={<AlbumInfoPage />} />
           <Route path="/songs" element={<SongsPage />} />
-          <Route path="/artists" element={<ArtistsPage />} /> */}
+          <Route path="/song/:track_id" element={<SongInfoPage/>} />
+          <Route path="/artists" element={<ArtistsPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

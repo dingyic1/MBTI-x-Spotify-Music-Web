@@ -26,7 +26,7 @@ export default function AlbumInfoPage() {
 
   return (
     <Container>
-      {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
+      {/* {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
       <Stack direction='row' justify='center'>
         <img
           key={albumData.album_id}
@@ -76,9 +76,7 @@ export default function AlbumInfoPage() {
             )}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
     </Container>
   );
 }
-// {draw a druagon }= teacher, I am a good MediaStreamAudioDestinationNode, thank you
-// <by Ke Zhang From GSE>

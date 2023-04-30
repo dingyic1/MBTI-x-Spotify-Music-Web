@@ -15,6 +15,7 @@ export default function SongCard({ songId, handleClose }) {
   const [albumData, setAlbumData] = useState({});
 
   const [barRadar, setBarRadar] = useState(true);
+  const [similarSongs, setSimilarSongs] = useState([]);
 
   // TODO (TASK 20): fetch the song specified in songId and based on the fetched album_id also fetch the album data
   // Hint: you need to both fill in the callback and the dependency array (what variable determines the information you need to fetch?)
@@ -37,16 +38,28 @@ export default function SongCard({ songId, handleClose }) {
           .then(res => res.json())
           .then(resJson => setAlbumData(resJson))
         });
+    fetchSimilarSongs();
   }, []);
+
+  async function fetchSimilarSongs() {
+    const response = await fetch(`http://${config.server_host}:${config.server_port}/similar_songs?track_id=${songData.track_id}`);
+    const data = await response.json();
+    setSimilarSongs(data);
+  }
 
   const chartData = [
     { name: 'Danceability', value: songData.danceability },
     { name: 'Energy', value: songData.energy },
     { name: 'Valence', value: songData.valence },
+    { name: 'Liveness', value: songData.liveness},
+    { name: 'Instrumentalness', value: songData.instrumentalness },
   ];
 
   const handleGraphChange = () => {
     setBarRadar(!barRadar);
+    if (barRadar == false){
+      fetchSimilarSongs();
+    }
   };
 
   return (
@@ -59,16 +72,16 @@ export default function SongCard({ songId, handleClose }) {
         p={3}
         style={{ background: 'white', borderRadius: '16px', border: '2px solid #000', width: 600 }}
       >
-        <h1>{songData.title}</h1>
+        <h1>{songData.track_name}</h1>
         <h2>Album:&nbsp;
           <NavLink to={`/albums/${albumData.album_id}`}>{albumData.title}</NavLink>
         </h2>
         <p>Duration: {formatDuration(songData.duration)}</p>
         <p>Tempo: {songData.tempo} bpm</p>
-        <p>Key: {songData.key_mode}</p>
+        <p>Release Date: {songData.release_date}</p>
         <ButtonGroup>
           <Button disabled={barRadar} onClick={handleGraphChange}>Bar</Button>
-          <Button disabled={!barRadar} onClick={handleGraphChange}>Radar</Button>
+          <Button disabled={!barRadar} onClick={handleGraphChange}>most Related 5 Songs</Button>
         </ButtonGroup>
         <div style={{ margin: 20 }}>
           { // This ternary statement returns a BarChart if barRadar is true, and a RadarChart otherwise
@@ -87,15 +100,16 @@ export default function SongCard({ songId, handleClose }) {
                 </ResponsiveContainer>
               ) : (
                 <ResponsiveContainer height={250}>
-                  {/* TODO (TASK 21): display the same data as the bar chart using a radar chart */}
-                  {/* Hint: refer to documentation at https://recharts.org/en-US/api/RadarChart */}
-                  {/* Hint: note you can omit the <Legend /> element and only need one Radar element, as compared to the sample in the docs */}
-                  <RadarChart data={chartData}>
-                      <PolarGrid />
-                      <PolarAngleAxis type='category' dataKey="name" />
-                      <PolarRadiusAxis type='number'  angle={30} domain={[0, 1]} />
-                      <Radar dataKey='value' stroke="#8884d8" fill="#8884d8" fillOpacity={0.6}/>
-                  </RadarChart>
+                  <ul>
+                    {similarSongs.map((song) => (        
+                      <li ken={song.track_id}>
+                        <ul>
+                          <li>{'Name' + song.track_name}</li>
+                          <li>{'Id' + song.track_id}</li>
+                        </ul>
+                      </li>
+                    ))}
+                  </ul>
                 </ResponsiveContainer>
               )
           }
