@@ -71,18 +71,40 @@ const artist = async function (req, res) {
 // Route 4: GET /albums
 const albums = async function (req, res) {
   // Show all albums information
-  connection.query(
-    `SELECT *
-                    FROM Albums; `,
-    (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json({});
-      } else {
-        res.json(data);
+  const page = req.query.page;
+  const pageSize = req.query.page_size ?? 10;
+  if (!page) {
+    connection.query(
+      `SELECT *
+        FROM Albums; `,
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
       }
-    }
-  );
+    );
+
+  }
+  else{
+    connection.query(
+      `SELECT *
+        FROM Albums
+        LIMIT ? 
+        OFFSET ?; `,[pageSize - 0, (page - 1) * pageSize],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+      }
+    );
+  }
+  
 };
 
 // Route 5: GET /artist/songs_count/:artist_id
@@ -301,7 +323,7 @@ const song_counts = async function (req, res) {
                         a.artist_name,
                         t.mbti
                         ORDER BY song_count DESC
-                        `,[mbti],
+                        `, [mbti],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -313,7 +335,7 @@ const song_counts = async function (req, res) {
       }
     );
   }
-  else{
+  else {
     connection.query(
       `SELECT a.artist_id,
                         a.artist_name,
@@ -331,7 +353,7 @@ const song_counts = async function (req, res) {
                         ORDER BY song_count DESC
                         LIMIT ? 
                         OFFSET ?
-                        `,[mbti, pageSize -0, (page - 1)*pageSize],
+                        `, [mbti, pageSize - 0, (page - 1) * pageSize],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -342,7 +364,7 @@ const song_counts = async function (req, res) {
         }
       }
     );
-  }  
+  }
 };
 
 // Route 12: GET /:mbti/mbti_song_counts
@@ -360,7 +382,7 @@ const album_mbti_song_counts = async function (req, res) {
           ORDER BY song_count DESC;
     `;
 
-    connection.query(query, [mbti],(err, data) => {
+    connection.query(query, [mbti], (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
         res.json([]);
@@ -370,7 +392,7 @@ const album_mbti_song_counts = async function (req, res) {
     });
 
   }
-  else{
+  else {
     const query = `
     SELECT a.album_id,a.album,tmf.mbti,COUNT(*) as song_count
     FROM Albums a JOIN Tracks_MBTIs tmf ON a.album_id = tmf.album_id WHERE tmf.mbti = ?
@@ -380,7 +402,7 @@ const album_mbti_song_counts = async function (req, res) {
     OFFSET ?;
   `;
 
-    connection.query(query, [mbti, pageSize -0, (page - 1)*pageSize], (err, data) => {
+    connection.query(query, [mbti, pageSize - 0, (page - 1) * pageSize], (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
         res.json([]);
@@ -390,21 +412,20 @@ const album_mbti_song_counts = async function (req, res) {
     });
 
   }
-  
+
 };
 
 // Route 13: GET /artist/mbti_songs
 // Return all artist's songs, corresponding MBTI type for each song, and release year for each song, ordered by release year
 const artist_mbti_songs = async function (req, res) {
   const query = `
-    SELECT a.artist_name,
-        t.track_name, tmf.mbti,
-        t.release_date as release_year
-    FROM Artists a
-    JOIN Writes w ON a.artist_id = w.artist_id
-    JOIN Tracks t ON w.track_id = t.track_id
-    JOIN Tracks_MBTIs tmf ON t.track_id = tmf.track_id
-    ORDER BY t.release_date;
+  SELECT a.artist_name,
+  tmf.track_name, tmf.mbti,
+  tmf.release_date as release_year
+FROM Artists a
+JOIN Writes w ON a.artist_id = w.artist_id
+JOIN Tracks_MBTIs tmf ON w.track_id = tmf.track_id
+ORDER BY tmf.release_date;
   `;
 
   connection.query(query, (err, data) => {
