@@ -42,7 +42,7 @@ export default function App() {
           <Route path="/" element={<EntryPage />} /> 
           <Route path="/homepage/:mbti" element={<HomePage/>} />
           <Route path="/albums" element={<AlbumsPage />} />
-          <Route path="/albums/:album_id" element={<AlbumInfoPage />} />
+          <Route path="/album/:album_id" element={<AlbumInfoPage />} />
           <Route path="/songs" element={<SongsPage />} />
           <Route path="/song/:track_id" element={<SongInfoPage/>} />
           <Route path="/artists" element={<ArtistsPage />} />
