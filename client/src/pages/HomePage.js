@@ -36,7 +36,7 @@ function Homepage() {
     },
     {
       field: 'song_count',
-      headerName: 'Number of Songs'
+      headerName: 'Number of Songs Number of Songs Written by the Artist'
     },
   ];
 
@@ -52,7 +52,7 @@ function Homepage() {
     },
     {
       field: 'song_count',
-      headerName: 'Number of Songs'
+      headerName: 'Number of Albums Written by the Artist'
     },
   ];
 
