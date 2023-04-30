@@ -22,50 +22,66 @@ function EntryPage() {
   };
 
   const handleChange = (event) => {
-    setMbti(event.target.value);
+    setMbti(event.target.value.toUpperCase());
   };
 
   return (
-    <Container className="entry-page">
-      <Box sx={{ display: "flex" }}>
-        <Grid container spacing={2}>
-          <Grid item md={8}>
-            <Box>
-              <form onSubmit={handleSubmit}>
-                <Typography variant="h3" gutterBottom className="font-link">
-                  Welcome to the MBTI x Music system!
-                </Typography>
-                <TextField
-                  label="MBTI Type"
-                  variant="outlined"
-                  value={mbti}
-                  onChange={handleChange}
-                  fullWidth
-                />
-                <Box sx={{ pt: 2 }}>
-                  <Button variant="contained" type="submit">
-                    Submit
-                  </Button>
-                </Box>
-              </form>
-            </Box>
-          </Grid>
-          <Grid item md={4}>
-            <Box sx={{ bgcolor: "primary.light", p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                About MBTI
-              </Typography>
-              <Typography variant="body1">
-                The Myers-Briggs Type Indicator (MBTI) is a personality
-                assessment tool used to measure personality traits and
-                preferences. It is based on Carl Jung's theory of psychological
-                types and is widely used in business, education, and other
-                fields to improve communication and team dynamics.
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
+    <Container>
+      <form onSubmit={handleSubmit}>
+        <h1 className="welcome">
+          Welcome to the <br />
+          MBTI x Music system
+        </h1>
+        <TextField
+          label="MBTI Type"
+          variant="outlined"
+          value={mbti}
+          onChange={handleChange}
+          fullWidth
+          inputProps={{
+            style: {
+              color: "#8c52ff",
+              backgroundColor: "white",
+              fontFamily: "Sigmar",
+            },
+          }}
+          sx={{
+            "& fieldset": { border: "none" },
+          }}
+        />
+        <Button
+          type="submit"
+          style={{
+            marginTop: "20px",
+            color: "#8c52ff",
+            backgroundColor: "white",
+            fontFamily: "Sigmar",
+          }}
+        >
+          Submit
+        </Button>
+      </form>
+      <div className="custom-font">
+        <h2 style={{ marginTop: "100px" }}>About MBTI</h2>
+        <div style={{ fontSize: "20px" }}>
+          <p>
+            The Myers-Briggs Type Indicator (MBTI) is a personality assessment
+            tool used to measure personality traits and preferences. It is based
+            on Carl Jung's theory of psychological types and is widely used in
+            business, education, and other fields to improve communication and
+            team dynamics.
+          </p>
+          <p>
+            Don't know your MBTI? Take the free personlity test{" "}
+            <a
+              style={{ color: "white" }}
+              href="https://www.16personalities.com/free-personality-test"
+            >
+              here
+            </a>
+          </p>
+        </div>
+      </div>
     </Container>
   );
 }

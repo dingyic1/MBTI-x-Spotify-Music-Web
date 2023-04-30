@@ -12,35 +12,13 @@ import {
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
-import "../styles/stylesheet.css";
+import styles from "../styles/stylesheet.css";
 
 // The hyperlinks in the NavBar contain a lot of repeated formatting code so a
 // helper component NavText local to the file is defined to prevent repeated code.
-const NavText = ({ href, text, isMain }) => {
-  return (
-    <Typography
-      variant={isMain ? "h5" : "h7"}
-      noWrap
-      // style={{
-      //   marginRight: "30px",
-      //   fontFamily: "monospace",
-      //   fontWeight: 700,
-      //   letterSpacing: ".3rem",
-      // }}
-      className="font-link"
-    >
-      <NavLink
-        to={href}
-        style={{
-          color: "inherit",
-          textDecoration: "none",
-        }}
-      >
-        {text}
-      </NavLink>
-    </Typography>
-  );
-};
+// const NavText = ({ href, text, isMain }) => {
+//   return <NavLink to={href}>{text}</NavLink>;
+// };
 
 // Here, we define the NavBar. Note that we heavily leverage MUI components
 // to make the component look nice. Feel free to try changing the formatting
@@ -65,7 +43,9 @@ export default function NavBar() {
           >
             <Menu />
           </IconButton>
-          <NavText href="/" text="Music x MBTI" isMain />
+          <NavLink className="navbar" to="/">
+            Music x MBTI
+          </NavLink>
         </Toolbar>
       </Container>
       <Drawer anchor="left" open={showDrawer} onClose={toggleDrawer}>
