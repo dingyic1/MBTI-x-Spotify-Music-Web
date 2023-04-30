@@ -71,18 +71,40 @@ const artist = async function (req, res) {
 // Route 4: GET /albums
 const albums = async function (req, res) {
   // Show all albums information
-  connection.query(
-    `SELECT *
-                    FROM Albums; `,
-    (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json({});
-      } else {
-        res.json(data);
+  const page = req.query.page;
+  const pageSize = req.query.page_size ?? 10;
+  if (!page) {
+    connection.query(
+      `SELECT *
+        FROM Albums; `,
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
       }
-    }
-  );
+    );
+
+  }
+  else{
+    connection.query(
+      `SELECT *
+        FROM Albums
+        LIMIT ? 
+        OFFSET ?; `,[pageSize - 0, (page - 1) * pageSize],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+      }
+    );
+  }
+  
 };
 
 // Route 5: GET /artist/songs_count/:artist_id
