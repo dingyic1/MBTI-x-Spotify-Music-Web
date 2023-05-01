@@ -172,31 +172,84 @@ const num_songs_artist = async function (req, res) {
 };
 
 // Route 6: GET /artists/song_counts
+// const num_songs_counts = async function (req, res) {
+//   // Return all information about all artists and the total number of songs they have written
+//   connection.query(
+//     `SELECT a.artist_name,
+//     a.artist_popularity,
+//     a.followers,
+//     COUNT(t.track_id) AS song_count
+//     FROM Artists a
+//     JOIN Writes w
+//     ON a.artist_id = w.artist_id
+//     JOIN Tracks t
+//     ON w.track_id = t.track_id
+//     Group by a.artist_name;
+//   `,
+//     (err, data) => {
+//       if (err || data.length === 0) {
+//         console.log(err);
+//         res.json({});
+//       } else {
+//         console.log();
+//         res.json(data);
+//       }
+//     }
+//   );
+// };
 const num_songs_counts = async function (req, res) {
-  // Return all information about all artists and the total number of songs they have written
-  connection.query(
-    `SELECT a.artist_name,
-    a.artist_popularity,
-    a.followers,
-    COUNT(t.track_id) AS song_count
-    FROM Artists a
-    JOIN Writes w
-    ON a.artist_id = w.artist_id
-    JOIN Tracks t
-    ON w.track_id = t.track_id
-    Group by a.artist_name;
-  `,
-    (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json({});
-      } else {
-        console.log();
-        res.json(data);
+  const page = req.query.page;
+  const pageSize = req.query.page_size ?? 10;
+  if (!page) {
+    connection.query(
+      `SELECT a.artist_name,
+        a.artist_popularity,
+        a.followers,
+        COUNT(t.track_id) AS song_count
+        FROM Artists a
+        JOIN Writes w
+        ON a.artist_id = w.artist_id
+        JOIN Tracks t
+        ON w.track_id = t.track_id
+        Group by a.artist_name; `,
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
       }
-    }
-  );
+    );
+
+  }
+  else {
+    connection.query(
+      `SELECT a.artist_name,
+        a.artist_popularity,
+        a.followers,
+        COUNT(t.track_id) AS song_count
+        FROM Artists a
+        JOIN Writes w
+        ON a.artist_id = w.artist_id
+        JOIN Tracks t
+        ON w.track_id = t.track_id
+        Group by a.artist_name
+        LIMIT ? 
+        OFFSET ?; `, [pageSize - 0, (page - 1) * pageSize],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+      }
+    );
+  }
 };
+
+
 
 // Route 7: GET /mbti/artists
 const artists_mbti = async function (req, res) {
@@ -491,24 +544,24 @@ const similar_artists = async function (req, res) {
   ),
   Artist_similar AS (
     SELECT t.track_id
-    FROM Artist_search as, Tracks t
-    WHERE t.danceability BETWEEN as.danceability - 0.5 AND as.danceability + 0.5
-      AND t.energy BETWEEN as.energy - 0.5 AND as.energy + 0.5
-      AND t.loudness BETWEEN as.loudness - 0.5 AND as.loudness + 0.5
-      AND t.mode BETWEEN as.mode - 0.5 AND as.mode + 0.5
-      AND t.speechiness BETWEEN as.speechiness - 0.5 AND as.speechiness + 0.5
-      AND t.acousticness BETWEEN as.acousticness - 0.5 AND as.acousticness + 0.5
-      AND t.instrumentalness BETWEEN as.instrumentalness - 0.5 AND as.instrumentalness + 0.5
-      AND t.liveness BETWEEN as.liveness - 0.5 AND as.liveness + 0.5
-      AND t.valence BETWEEN as.valence - 0.5 AND as.valence + 0.5
-      AND t.tempo BETWEEN as.tempo - 0.5 AND as.tempo + 0.5
+    FROM artist_search as_1, Tracks t
+    WHERE t.danceability BETWEEN as_1.danceability - 0.5 AND as_1.danceability + 0.5
+      AND t.energy BETWEEN as_1.energy - 0.5 AND as_1.energy + 0.5
+      AND t.loudness BETWEEN as_1.loudness - 0.5 AND as_1.loudness + 0.5
+      AND t.mode BETWEEN as_1.mode - 0.5 AND as_1.mode + 0.5
+      AND t.speechiness BETWEEN as_1.speechiness - 0.5 AND as_1.speechiness + 0.5
+      AND t.acousticness BETWEEN as_1.acousticness - 0.5 AND as_1.acousticness + 0.5
+      AND t.instrumentalness BETWEEN as_1.instrumentalness - 0.5 AND as_1.instrumentalness + 0.5
+      AND t.liveness BETWEEN as_1.liveness - 0.5 AND as_1.liveness + 0.5
+      AND t.valence BETWEEN as_1.valence - 0.5 AND as_1.valence + 0.5
+      AND t.tempo BETWEEN as_1.tempo - 0.5 AND as_1.tempo + 0.5
   )
-  SELECT a1.artist_name
-  FROM Writes w1
-  JOIN Artists a1 ON a1.artist_id = w1.artist_id
-  JOIN Artist_similar as1 ON w1.track_id = as1.track_id
-  ORDER BY a1.artist_id
-  LIMIT 5;
+SELECT a1.artist_name
+FROM Writes w1
+JOIN Artists a1 ON a1.artist_id = w1.artist_id
+JOIN Artist_similar as1 ON w1.track_id = as1.track_id
+ORDER BY a1.artist_id
+LIMIT 5;
   `;
 
   connection.query(query, artist_name, (err, data) => {
