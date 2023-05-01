@@ -5,23 +5,56 @@ import "../styles/stylesheet.css";
 const config = require("../config.json");
 
 export default function ArtistInfoPage() {
-  const { artist_name } = useParams();
+  const { artist_id } = useParams();
 
   const [similarArtists, setSimilarArtists] = useState([]);
-  const [artistData, setartistData] = useState([]);
+  const [artistData, setArtistData] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/artists/similar/${artist_name}`)
-      .then((res) => res.json())
-      .then((resJson) => setartistData(resJson));
-  }, [artist_name]);
+    fetch(`http://${config.server_host}:${config.server_port}/artists/similar/${artist_id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Error fetching artist data");
+        }
+        return res.json();
+      })
+      .then((resJson) => {
+        console.log("Artist data:", resJson);
+        setArtistData(resJson);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err.message);
+      });
+  }, [artist_id]);
 
-  async function fetchSimilarArtists() {
-    const response = await fetch(
-      `http://${config.server_host}:${config.server_port}/artists/similar?artist_name=${artistData.artist_name}`
-    );
-    const data = await response.json();
-    setSimilarArtists(data);
+  useEffect(() => {
+    if (artistData) {
+      fetch(`http://${config.server_host}:${config.server_port}/similar_artists?artist_id=${artistData.artist_id}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Error fetching similar artists data");
+          }
+          return res.json();
+        })
+        .then((resJson) => {
+          console.log("Similar artists data:", resJson);
+          setSimilarArtists(resJson);
+        })
+        .catch((err) => {
+          console.error(err);
+          setError(err.message);
+        });
+    }
+  }, [artistData]);
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!artistData) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -30,13 +63,13 @@ export default function ArtistInfoPage() {
       <h2>
         Artist:&nbsp;
         <NavLink to={`/album/${artistData.artist_id}`}>
-          {artistData.artist}
+          {artistData.artist_name}
         </NavLink>
       </h2>
       <h3>Similar Artists:</h3>
       <ul>
-        {similarArtists.map((artist) => (
-          <li key={artist.artist_id}>
+        {similarArtists.map((artist, index) => (
+          <li key={index}>
             <NavLink to={`/artist/${artist.artist_id}`}>
               {artist.artist_name}
             </NavLink>
@@ -46,3 +79,5 @@ export default function ArtistInfoPage() {
     </Container>
   );
 }
+
+

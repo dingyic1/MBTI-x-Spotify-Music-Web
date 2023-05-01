@@ -39,7 +39,8 @@ app.get("/artist/songs_count/:artist_id", routes.num_songs_artist);
 app.get("/artists/song_counts", routes.num_songs_counts);
 app.get("/mbti/artists", routes.artists_mbti);
 app.get("/artists/mbti_songs", routes.artist_mbti_songs);
-app.get("/artists/similar", routes.similar_artists);
+//ArtistInfo page
+app.get("/artists/similar/:artist_id", routes.similar_artists);
 app.get("/search_songs", routes.search_songs);
 
 

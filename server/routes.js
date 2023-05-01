@@ -525,7 +525,7 @@ ORDER BY tmf.release_date;
 // Route 14: GET /artists/similar
 // Given an artist_name, return similar artists based on the features of the songs written by that artist.
 const similar_artists = async function (req, res) {
-  const artist_name = req.query.artist_name;
+  const artist_id = req.query.artist_id;
 
   const query = `
   WITH artist_search AS (
@@ -534,7 +534,7 @@ const similar_artists = async function (req, res) {
         acousticness, valence, tempo
     FROM Writes w JOIN Artists a ON a.artist_id = w.artist_id
         JOIN Tracks t ON w.track_id = t.track_id
-    WHERE a.artist_name = ?
+    WHERE a.artist_id = ?
   ),
   Artist_similar AS (
     SELECT t.track_id
