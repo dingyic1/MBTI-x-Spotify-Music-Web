@@ -503,16 +503,10 @@ const album_mbti_song_counts = async function (req, res) {
 // Return all artist's songs, corresponding MBTI type for each song, and release year for each song, ordered by release year
 const artist_mbti_songs = async function (req, res) {
   const query = `
-  SELECT a.artist_name,
-  tmf.track_name, tmf.mbti,
-  tmf.release_date as release_year
-FROM Artists a
-JOIN Writes w ON a.artist_id = w.artist_id
-JOIN Tracks_MBTIs tmf ON w.track_id = tmf.track_id
-ORDER BY tmf.release_date;
+  SELECT artist_id, artist_name FROM Artists WHERE artist.id = ?
   `;
 
-  connection.query(query, (err, data) => {
+  connection.query(query, artist_id, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json([]);
