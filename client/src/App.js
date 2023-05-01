@@ -46,7 +46,7 @@ export default function App() {
           <Route path="/songs" element={<SongsPage />} />
           <Route path="/song/:track_id" element={<SongInfoPage />} />
           <Route path="/artists" element={<ArtistsPage />} />
-          <Route path="/artists/:artist_id" element={<ArtistsInfoPage />} />
+          <Route path="/artist/:artist_id" element={<ArtistsInfoPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

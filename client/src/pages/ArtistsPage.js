@@ -18,9 +18,10 @@ export default function ArtistsPage() {
       field: "artist_name",
       headerName: "Artist Name",
       renderCell: (row) => (
+        
         <NavLink
-          to={`/artists/${row.artist_id}`}
-          onClick={() => setSelectedartistId(row.artist_id)
+          to={`/artist/${row.artist_id}`}
+          onClick={() => {setSelectedartistId(row.artist_id);}
           }
         >
           {row.artist_name}

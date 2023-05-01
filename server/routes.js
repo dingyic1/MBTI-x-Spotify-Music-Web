@@ -198,7 +198,7 @@ const num_songs_counts = async function (req, res) {
   const pageSize = req.query.page_size ?? 10;
   if (!page) {
     connection.query(
-      `SELECT a.artist_name,
+      `SELECT a.artist_id, a.artist_name,
         a.artist_popularity,
         a.followers,
         COUNT(t.track_id) AS song_count
@@ -219,7 +219,7 @@ const num_songs_counts = async function (req, res) {
     );
   } else {
     connection.query(
-      `SELECT a.artist_name,
+      `SELECT a.artist_id, a.artist_name,
         a.artist_popularity,
         a.followers,
         COUNT(t.track_id) AS song_count
@@ -519,7 +519,7 @@ const artist_mbti_songs = async function (req, res) {
 // Route 14: GET /artists/similar
 // Given an artist_name, return similar artists based on the features of the songs written by that artist.
 const similar_artists = async function (req, res) {
-  const artist_id = req.query.artist_id;
+  const artist_id = req.params.artist_id;
 
   const query = `
   WITH artist_search AS (
