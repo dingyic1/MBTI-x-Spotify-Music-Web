@@ -48,12 +48,15 @@ export default function AlbumInfoPage() {
   }, [album_id]);
 
   return (
-    <Container>
+    <Container className="custom-font">
       <Stack direction="row" justify="center">
         <h1 style={{ fontSize: 64 }}>{albumData.album}</h1>
       </Stack>
       <Stack direction="row" justify="center">
-        <PieChartComponent chartData={PercentData} />
+        <div>
+          <h1>Album Breakdown by MBTI</h1>
+          <PieChartComponent chartData={PercentData} />
+        </div>
       </Stack>
       {selectedSongId && (
         <SongInfoPage
@@ -61,7 +64,7 @@ export default function AlbumInfoPage() {
           handleClose={() => setSelectedSongId(null)}
         />
       )}
-
+      <h1>Album Tracks</h1>
       <TableContainer>
         <Table>
           <TableHead>

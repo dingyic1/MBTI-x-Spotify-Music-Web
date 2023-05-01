@@ -55,29 +55,47 @@ export default function AlbumInfoPage() {
 
   return (
     <Container className="custom-font">
-      <h1>{songData.track_name}</h1>
+      <h1 style={{ margin: "50px 0px" }}>{songData.track_name}</h1>
       <h2>
         Album:&nbsp;
         <NavLink to={`/album/${albumData.album_id}`}>{albumData.album}</NavLink>
       </h2>
-      <p>Duration: {formatDuration(songData.duration_ms)}</p>
       <p>Tempo: {songData.tempo} bpm</p>
+      <p>Duration: {formatDuration(songData.duration_ms)}</p>
       <p>Release Date: {songData.release_date}</p>
       <ButtonGroup>
-        <Button disabled={barRadar} onClick={handleGraphChange}>
+        <Button
+          disabled={barRadar}
+          onClick={handleGraphChange}
+          style={{
+            marginTop: "20px",
+            color: "#8c52ff",
+            backgroundColor: "white",
+            fontFamily: "Sigmar",
+          }}
+        >
           Bar
         </Button>
-        <Button disabled={!barRadar} onClick={handleGraphChange}>
+        <Button
+          disabled={!barRadar}
+          onClick={handleGraphChange}
+          style={{
+            marginTop: "20px",
+            color: "#8c52ff",
+            backgroundColor: "white",
+            fontFamily: "Sigmar",
+          }}
+        >
           most Related 5 Songs
         </Button>
       </ButtonGroup>
       <div style={{ margin: 20 }}>
         {barRadar ? (
           <ResponsiveContainer height={500}>
-            <BarChart data={chartData} layout="vertical" margin={{ left: 40 }}>
+            <BarChart data={chartData} layout="vertical" margin={{ left: 100 }}>
               <XAxis type="number" domain={[0, 1]} />
               <YAxis type="category" dataKey="name" />
-              <Bar dataKey="value" stroke="#8884d8" fill="#8884d8" />
+              <Bar dataKey="value" stroke="#8884d8" fill="#8C52FF" />
             </BarChart>
           </ResponsiveContainer>
         ) : (
