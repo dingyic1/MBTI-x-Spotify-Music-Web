@@ -17,63 +17,73 @@ function EntryPage() {
   };
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <h1 className="welcome">
-          Welcome to the <br />
-          MBTI x Music system
-        </h1>
-        <TextField
-          label="MBTI Type"
-          variant="outlined"
-          value={mbti}
-          onChange={handleChange}
-          fullWidth
-          inputProps={{
-            style: {
+    <div
+      style={{
+        color: "#fff",
+        backgroundColor: "#8c52ff",
+        paddingTop: "8vh",
+        height: "100vh",
+        width: "100vw",
+      }}
+    >
+      <Container>
+        <form onSubmit={handleSubmit}>
+          <h1 className="welcome">
+            Welcome to the <br />
+            MBTI x Music system
+          </h1>
+          <TextField
+            label="MBTI Type"
+            variant="outlined"
+            value={mbti}
+            onChange={handleChange}
+            fullWidth
+            inputProps={{
+              style: {
+                color: "#8c52ff",
+                backgroundColor: "white",
+                fontFamily: "Sigmar",
+              },
+            }}
+            sx={{
+              "& fieldset": { border: "none" },
+            }}
+          />
+          <Button
+            type="submit"
+            style={{
+              marginTop: "20px",
               color: "#8c52ff",
               backgroundColor: "white",
               fontFamily: "Sigmar",
-            },
-          }}
-          sx={{
-            "& fieldset": { border: "none" },
-          }}
-        />
-        <Button
-          type="submit"
-          style={{
-            marginTop: "20px",
-            color: "#8c52ff",
-            backgroundColor: "white",
-            fontFamily: "Sigmar",
-          }}
-        >
-          Submit
-        </Button>
-      </form>
-      <div className="custom-font">
-        <h2 style={{ marginTop: "100px" }}>About MBTI</h2>
-        <div style={{ fontSize: "20px" }}>
-          <p>
-            The Myers-Briggs Type Indicator (MBTI) is a personality assessment
-            tool used to measure personality traits and preferences. It is based
-            on Carl Jung's theory of psychological types and is widely used in
-            business, education, and other fields to improve communication and
-            team dynamics.
-          </p>
-          <p>
-            Don't know your MBTI? Take the free personlity test{" "}
-            <a
-              style={{ color: "white" }}
-              href="https://www.16personalities.com/free-personality-test"
-            >
-              here
-            </a>
-          </p>
+            }}
+          >
+            Submit
+          </Button>
+        </form>
+        <div className="custom-font">
+          <h2 style={{ marginTop: "100px" }}>About MBTI</h2>
+          <div style={{ fontSize: "20px" }}>
+            <p>
+              The Myers-Briggs Type Indicator (MBTI) is a personality assessment
+              tool used to measure personality traits and preferences. It is
+              based on Carl Jung's theory of psychological types and is widely
+              used in business, education, and other fields to improve
+              communication and team dynamics.
+            </p>
+            <p>
+              Don't know your MBTI? Take the free personlity test{" "}
+              <a
+                style={{ color: "white" }}
+                href="https://www.16personalities.com/free-personality-test"
+              >
+                here
+              </a>
+            </p>
+          </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 }
 

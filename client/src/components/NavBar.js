@@ -31,7 +31,10 @@ export default function NavBar() {
   };
 
   return (
-    <AppBar position="static" style={{ background: "#8C52FF" }}>
+    <AppBar
+      position="static"
+      style={{ background: "#8C52FF", margin: "0", padding: "0" }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <IconButton
