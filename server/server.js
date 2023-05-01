@@ -27,6 +27,8 @@ app.get("/album/:album_id", routes.album);
 app.get("/albums", routes.albums);
 app.get("/mbti/albums", routes.mbti_albums);
 app.get("/album_songs/:album_id", routes.album_songs);
+app.get("/album_mbti_percentage/:album_id", routes.album_mbti_percentage);
+
 
 
 //Artist Page

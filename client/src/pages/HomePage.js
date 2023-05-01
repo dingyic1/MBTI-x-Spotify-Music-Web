@@ -23,7 +23,7 @@ function Homepage() {
 
   async function fetchSongsRecommend() {
     const response = await fetch(
-      `http://${config.server_host}:${config.server_port}/homepage/${mbti}/recommend?mbti=${mbti}`
+      `http://${config.server_host}:${config.server_port}/homepage/${mbti}/recommend`
     );
     const data = await response.json();
     setSongs(data);

@@ -37,15 +37,14 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <NavBar />
+        <NavBar/>
         <Routes>
-          <Route path="/" element={<EntryPage />} />
-          <Route path="/homepage/:mbti" element={<HomePage />} />
+          <Route path="/" element={<EntryPage />} /> 
+          <Route path="/homepage/:mbti" element={<HomePage/>} />
           <Route path="/albums" element={<AlbumsPage />} />
           <Route path="/album/:album_id" element={<AlbumInfoPage />} />
           <Route path="/songs" element={<SongsPage />} />
-          <Route path="/song/:track_id" element={<SongInfoPage />} />
-          <Route path="/artists/:artist_id" element={<ArtistInfoPage />} />
+          <Route path="/song/:track_id" element={<SongInfoPage/>} />
           <Route path="/artists" element={<ArtistsPage />} />
         </Routes>
       </BrowserRouter>

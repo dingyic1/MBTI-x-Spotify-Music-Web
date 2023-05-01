@@ -307,10 +307,10 @@ const mbti_albums = async function (req, res) {
   );
 };
 
-// Route 9: GET /recommend
+// Route 9: GET :mbti/recommend
 const mbti_songs = async function (req, res) {
   // Given a MBTI, return a similar song for that MBTI. For example, we want to find a random song for ISTJ.
-  const mbti = req.query.mbti ?? "";
+  const mbti = req.params.mbti;
   const num_songs = req.query.num_songs ?? 5;
   connection.query(
     `WITH track_istj AS (
@@ -653,6 +653,58 @@ const album_songs = async function (req, res) {
   );
 };
 
+// Route 17: GET /album_mbti_percentage/:album_id
+const album_mbti_percentage = async function (req, res) {
+  const album_id = req.params.album_id;
+  connection.query(
+    `WITH album_song_counts AS (
+      SELECT
+          a.album_id,
+          a.album,
+          t.mbti,
+          COUNT(t.track_id) AS number_of_songs
+      FROM
+          Tracks_MBTIs t
+          JOIN Albums a ON t.album_id = a.album_id
+      WHERE a.album_id = ?
+      GROUP BY
+          a.album_id, a.album, t.mbti
+  ),
+  
+  total_songs_in_album AS (
+      SELECT
+          album_id,
+          COUNT(*) AS total
+      FROM
+          Tracks_MBTIs
+      GROUP BY
+          album_id
+  )
+  
+  SELECT
+      asc_alias.album,
+      asc_alias.mbti,
+      (asc_alias.number_of_songs * 100.0 / tsia.total) AS percentage
+  FROM
+      album_song_counts asc_alias
+      JOIN total_songs_in_album tsia ON asc_alias.album_id = tsia.album_id
+  ORDER BY
+      asc_alias.album_id, asc_alias.mbti;`,
+    [album_id],
+    (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json({});
+      } else {
+        console.log(666);
+        res.json(data);
+      }
+    }
+  );
+};
+
+
+
 module.exports = {
   artist,
   song,
@@ -670,6 +722,7 @@ module.exports = {
   similar_artists,
   search_songs,
   album_songs,
+  album_mbti_percentage,
 };
 
 
