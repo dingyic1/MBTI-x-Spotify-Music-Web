@@ -66,6 +66,7 @@ const artist = async function (req, res) {
   //     }
   //   );
   // };
+
   const page = req.query.page;
   const pageSize = req.query.page_size ?? 10;
   if (!page) {

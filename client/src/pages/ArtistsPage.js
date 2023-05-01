@@ -18,14 +18,6 @@ export default function ArtistsPage() {
     {
       field: "artist_name",
       headerName: "Artist Name",
-      renderCell: (row) => (
-        <NavLink
-          to={`/artist/${row.artist_id}`}
-          onClick={() => setSelectedArtistId(row.artist_id)}
-        >
-          {row.artist_name}
-        </NavLink>
-      ),
     },
     {
       field: "followers",
