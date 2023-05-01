@@ -58,7 +58,7 @@ export default function AlbumInfoPage() {
       <h1>{songData.track_name}</h1>
       <h2>
         Album:&nbsp;
-        <NavLink to={`/albums/${albumData.album_id}`}>
+        <NavLink to={`/album/${albumData.album_id}`}>
           {albumData.album}
         </NavLink>
       </h2>

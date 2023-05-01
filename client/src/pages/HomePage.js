@@ -5,6 +5,7 @@ import { NavLink, useParams } from "react-router-dom";
 import LazyTable from "../components/LazyTable";
 import SongInfoPage from "./SongInfoPage";
 import "../styles/stylesheet.css";
+import AlbumInfoPage from "./SongInfoPage";
 const config = require("../config.json");
 
 function Homepage() {
@@ -12,6 +13,8 @@ function Homepage() {
   const [songs, setSongs] = useState([]);
   const [selectedSongId, setSelectedSongId] = useState(null);
   const [selectedArtistId, setSelectedArtistId] = useState(null);
+  const [selectedAlbumId, setSelectedAlbumId] = useState(null);
+  
 
   useEffect(() => {
     console.log("useEffect called");
