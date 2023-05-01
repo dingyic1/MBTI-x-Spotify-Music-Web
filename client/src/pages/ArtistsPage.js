@@ -28,8 +28,8 @@ export default function ArtistsPage() {
       ),
     },
     {
-      field: "artist_id",
-      headerName: "Artist ID",
+      field: "followers",
+      headerName: "Followers",
     },
   ];
 

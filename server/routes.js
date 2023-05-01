@@ -49,7 +49,7 @@ const album = async function (req, res) {
   );
 };
 
-// Route 3: GET /artist/:artist_id
+// Route 3: GET /artists
 const artist = async function (req, res) {
   // Given an artist_id, returns all information about the artist
   //   const artist_id = req.params.artist_id;
@@ -70,7 +70,7 @@ const artist = async function (req, res) {
   const pageSize = req.query.page_size ?? 10;
   if (!page) {
     connection.query(
-      `SELECT *
+      `SELECT artist_name, followers
         FROM Artists; `,
       (err, data) => {
         if (err || data.length === 0) {
@@ -85,7 +85,7 @@ const artist = async function (req, res) {
   }
   else {
     connection.query(
-      `SELECT *
+      `SELECT artist_name, followers
         FROM Artists
         LIMIT ? 
         OFFSET ?; `, [pageSize - 0, (page - 1) * pageSize],
@@ -101,6 +101,7 @@ const artist = async function (req, res) {
   }
 
 };
+
 // Route 4: GET /albums
 const albums = async function (req, res) {
   // Show all albums information
