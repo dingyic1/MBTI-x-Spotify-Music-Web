@@ -82,14 +82,13 @@ const artist = async function (req, res) {
         }
       }
     );
-
-  }
-  else {
+  } else {
     connection.query(
       `SELECT artist_name, followers
         FROM Artists
         LIMIT ? 
-        OFFSET ?; `, [pageSize - 0, (page - 1) * pageSize],
+        OFFSET ?; `,
+      [pageSize - 0, (page - 1) * pageSize],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -100,7 +99,6 @@ const artist = async function (req, res) {
       }
     );
   }
-
 };
 
 // Route 4: GET /albums
@@ -121,14 +119,13 @@ const albums = async function (req, res) {
         }
       }
     );
-
-  }
-  else {
+  } else {
     connection.query(
       `SELECT *
         FROM Albums
         LIMIT ? 
-        OFFSET ?; `, [pageSize - 0, (page - 1) * pageSize],
+        OFFSET ?; `,
+      [pageSize - 0, (page - 1) * pageSize],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -139,7 +136,6 @@ const albums = async function (req, res) {
       }
     );
   }
-
 };
 
 // Route 5: GET /artist/songs_count/:artist_id
@@ -221,9 +217,7 @@ const num_songs_counts = async function (req, res) {
         }
       }
     );
-
-  }
-  else {
+  } else {
     connection.query(
       `SELECT a.artist_name,
         a.artist_popularity,
@@ -236,7 +230,8 @@ const num_songs_counts = async function (req, res) {
         ON w.track_id = t.track_id
         Group by a.artist_name
         LIMIT ? 
-        OFFSET ?; `, [pageSize - 0, (page - 1) * pageSize],
+        OFFSET ?; `,
+      [pageSize - 0, (page - 1) * pageSize],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -248,8 +243,6 @@ const num_songs_counts = async function (req, res) {
     );
   }
 };
-
-
 
 // Route 7: GET /mbti/artists
 const artists_mbti = async function (req, res) {
@@ -341,7 +334,7 @@ const mbti_songs = async function (req, res) {
 // Route 10: GET /similar_songs
 const similar_songs = async function (req, res) {
   // Given a MBTI, return all similar songs for that MBTI
-  const song_id = req.query.track_id
+  const song_id = req.query.track_id;
   // const num_albums = req.query.num_albums ?? 1;
   connection.query(
     `WITH Track_search AS(
@@ -413,7 +406,8 @@ const song_counts = async function (req, res) {
                         a.artist_name,
                         t.mbti
                         ORDER BY song_count DESC
-                        `, [mbti],
+                        `,
+      [mbti],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -424,8 +418,7 @@ const song_counts = async function (req, res) {
         }
       }
     );
-  }
-  else {
+  } else {
     connection.query(
       `SELECT a.artist_id,
                         a.artist_name,
@@ -443,7 +436,8 @@ const song_counts = async function (req, res) {
                         ORDER BY song_count DESC
                         LIMIT ? 
                         OFFSET ?
-                        `, [mbti, pageSize - 0, (page - 1) * pageSize],
+                        `,
+      [mbti, pageSize - 0, (page - 1) * pageSize],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -480,9 +474,7 @@ const album_mbti_song_counts = async function (req, res) {
         res.json(data);
       }
     });
-
-  }
-  else {
+  } else {
     const query = `
     SELECT a.album_id,a.album,tmf.mbti,COUNT(*) as song_count
     FROM Albums a JOIN Tracks_MBTIs tmf ON a.album_id = tmf.album_id WHERE tmf.mbti = ?
@@ -492,17 +484,19 @@ const album_mbti_song_counts = async function (req, res) {
     OFFSET ?;
   `;
 
-    connection.query(query, [mbti, pageSize - 0, (page - 1) * pageSize], (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json([]);
-      } else {
-        res.json(data);
+    connection.query(
+      query,
+      [mbti, pageSize - 0, (page - 1) * pageSize],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+        }
       }
-    });
-
+    );
   }
-
 };
 
 // Route 13: GET /artist/mbti_songs
@@ -577,7 +571,6 @@ LIMIT 5;
 // Route 15: GET /search_songs
 // Given an artist_name, return similar artists based on the features of the songs written by that artist.
 const search_songs = async function (req, res) {
-  const mbti = req.query.mbti ?? "";
   const name = req.query.name ?? "";
   const explicit = req.query.explicit === "true" ? 1 : 0;
   const mode = req.query.mode === "true" ? 1 : 0;
@@ -605,8 +598,7 @@ const search_songs = async function (req, res) {
   connection.query(
     `
     SELECT * FROM Tracks
-    WHERE mbti LIKE ‘%${mbti}%’
-    AND track_name LIKE ‘%${name}%’;
+    WHERE track_name LIKE "%${name}%"
     AND explicit <= ${explicit}
     AND mode <= ${mode}
     AND duration_ms BETWEEN ${durationLow} AND ${durationHigh}
@@ -703,8 +695,6 @@ const album_mbti_percentage = async function (req, res) {
   );
 };
 
-
-
 module.exports = {
   artist,
   song,
@@ -724,5 +714,3 @@ module.exports = {
   album_songs,
   album_mbti_percentage,
 };
-
-
