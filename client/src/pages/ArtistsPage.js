@@ -1,66 +1,46 @@
-import { useEffect, useState } from "react";
-import { Box, Container, TextField, Button } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Container, Divider } from "@mui/material";
 import { NavLink } from "react-router-dom";
-
+import LazyTable from "../components/LazyTable";
 const config = require("../config.json");
 
 export default function ArtistsPage() {
-  const [artistName, setArtistName] = useState("");
-  const [similarArtists, setSimilarArtists] = useState([]);
-  const [error, setError] = useState(null);
+  const [artists, setArtists] = useState([]);
+  const [selectedArtistId, setSelectedArtistId] = useState(null);
 
-  async function searchSimilarArtists() {
-    try {
-      const response = await fetch(
-        `${config.server_host}:${config.server_port}/artists/similar`
-      );
-      if (!response.ok) {
-        throw new Error("Error fetching data from the server.");
-      }
-      const data = await response.json();
-      setSimilarArtists(data);
-      setError(null);
-    } catch (error) {
-      console.error("Error fetching similar artists:", error.message);
-      setError(error.message);
-    }
-  }
+  useEffect(() => {
+    fetch(`http://${config.server_host}:${config.server_port}/artists`)
+      .then((res) => res.json())
+      .then((resJson) => setArtists(resJson));
+  }, []);
 
-  function handleSearchSubmit(e) {
-    e.preventDefault();
-    searchSimilarArtists();
-  }
+  const artistColumns = [
+    {
+      field: "artist_name",
+      headerName: "Artist Name",
+      renderCell: (row) => (
+        <NavLink
+          to={`/artist/${row.artist_id}`}
+          onClick={() => setSelectedArtistId(row.artist_id)}
+        >
+          {row.artist_name}
+        </NavLink>
+      ),
+    },
+    {
+      field: "artist_id",
+      headerName: "Artist ID",
+    },
+  ];
 
   return (
     <Container>
       <h1>Artists</h1>
-      <form onSubmit={handleSearchSubmit}>
-        <TextField
-          label="Artist Name"
-          value={artistName}
-          onChange={(e) => setArtistName(e.target.value)}
-          variant="outlined"
-          style={{ marginRight: "10px" }}
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Search
-        </Button>
-      </form>
-      {error && <p>Error: {error}</p>}
-      {similarArtists.length > 0 && (
-        <Box>
-          <h2>Similar Artists:</h2>
-          <ul>
-            {similarArtists.map((artist, index) => (
-              <li key={index}>
-                <NavLink to={`/artist/${artist.artist_id}`}>
-                  {artist.artist_name}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </Box>
-      )}
+      <Divider />
+      <LazyTable
+        route={`http://${config.server_host}:${config.server_port}/artists`}
+        columns={artistColumns}
+      />
     </Container>
   );
 }

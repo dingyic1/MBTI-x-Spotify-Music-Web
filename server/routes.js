@@ -52,22 +52,55 @@ const album = async function (req, res) {
 // Route 3: GET /artist/:artist_id
 const artist = async function (req, res) {
   // Given an artist_id, returns all information about the artist
-  const artist_id = req.params.artist_id;
-  console.log(req.params.artist_id);
-  connection.query(
-    `SELECT * FROM Artists WHERE artist_id = ? `,
-    artist_id,
-    (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json({});
-      } else {
-        res.json(data[0]);
+  //   const artist_id = req.params.artist_id;
+  //   connection.query(
+  //     `SELECT * FROM Artists WHERE artist_id = ? `,
+  //     artist_id,
+  //     (err, data) => {
+  //       if (err || data.length === 0) {
+  //         console.log(err);
+  //         res.json({});
+  //       } else {
+  //         res.json(data[0]);
+  //       }
+  //     }
+  //   );
+  // };
+  const page = req.query.page;
+  const pageSize = req.query.page_size ?? 10;
+  if (!page) {
+    connection.query(
+      `SELECT *
+        FROM Artists; `,
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
       }
-    }
-  );
-};
+    );
 
+  }
+  else {
+    connection.query(
+      `SELECT *
+        FROM Artists
+        LIMIT ? 
+        OFFSET ?; `, [pageSize - 0, (page - 1) * pageSize],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json({});
+        } else {
+          res.json(data);
+        }
+      }
+    );
+  }
+
+};
 // Route 4: GET /albums
 const albums = async function (req, res) {
   // Show all albums information
@@ -88,12 +121,12 @@ const albums = async function (req, res) {
     );
 
   }
-  else{
+  else {
     connection.query(
       `SELECT *
         FROM Albums
         LIMIT ? 
-        OFFSET ?; `,[pageSize - 0, (page - 1) * pageSize],
+        OFFSET ?; `, [pageSize - 0, (page - 1) * pageSize],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -104,7 +137,7 @@ const albums = async function (req, res) {
       }
     );
   }
-  
+
 };
 
 // Route 5: GET /artist/songs_count/:artist_id
@@ -444,37 +477,37 @@ const similar_artists = async function (req, res) {
   const artist_name = req.query.artist_name;
 
   const query = `
-    WITH artist_search AS (
-      SELECT mode, liveness, loudness, danceability,
-          instrumentalness, energy, speechiness,
-          acousticness, valence, tempo
-      FROM Writes w JOIN Artists a ON a.artist_id = w.artist_id
-          JOIN Tracks t ON w.track_id = t.track_id
-      WHERE a.artist_name = '${artist_name}'
-    ),
-    Artist_similar AS (
-      SELECT t.track_id
-      FROM Artist_search as, Tracks t
-      WHERE t.danceability BETWEEN as.danceability - 0.5 AND as.danceability + 0.5
-        AND t.energy BETWEEN as.energy - 0.5 AND as.energy + 0.5
-        AND t.loudness BETWEEN as.loudness - 0.5 AND as.loudness + 0.5
-        AND t.mode BETWEEN as.mode - 0.5 AND as.mode + 0.5
-        AND t.speechiness BETWEEN as.speechiness - 0.5 AND as.speechiness + 0.5
-        AND t.acousticness BETWEEN as.acousticness - 0.5 AND as.acousticness + 0.5
-        AND t.instrumentalness BETWEEN as.instrumentalness - 0.5 AND as.instrumentalness + 0.5
-        AND t.liveness BETWEEN as.liveness - 0.5 AND as.liveness + 0.5
-        AND t.valence BETWEEN as.valence - 0.5 AND as.valence + 0.5
-        AND t.tempo BETWEEN as.tempo - 0.5 AND as.tempo + 0.5
-    )
-    SELECT a1.artist_name
-    FROM Writes w1
-    JOIN Artists a1 ON a1.artist_id = w1.artist_id
-    JOIN Artist_similar as1 ON w1.track_id = as1.track_id
-    ORDER BY a1.artist_id
-    LIMIT 5;
+  WITH artist_search AS (
+    SELECT mode, liveness, loudness, danceability,
+        instrumentalness, energy, speechiness,
+        acousticness, valence, tempo
+    FROM Writes w JOIN Artists a ON a.artist_id = w.artist_id
+        JOIN Tracks t ON w.track_id = t.track_id
+    WHERE a.artist_name = ?
+  ),
+  Artist_similar AS (
+    SELECT t.track_id
+    FROM Artist_search as, Tracks t
+    WHERE t.danceability BETWEEN as.danceability - 0.5 AND as.danceability + 0.5
+      AND t.energy BETWEEN as.energy - 0.5 AND as.energy + 0.5
+      AND t.loudness BETWEEN as.loudness - 0.5 AND as.loudness + 0.5
+      AND t.mode BETWEEN as.mode - 0.5 AND as.mode + 0.5
+      AND t.speechiness BETWEEN as.speechiness - 0.5 AND as.speechiness + 0.5
+      AND t.acousticness BETWEEN as.acousticness - 0.5 AND as.acousticness + 0.5
+      AND t.instrumentalness BETWEEN as.instrumentalness - 0.5 AND as.instrumentalness + 0.5
+      AND t.liveness BETWEEN as.liveness - 0.5 AND as.liveness + 0.5
+      AND t.valence BETWEEN as.valence - 0.5 AND as.valence + 0.5
+      AND t.tempo BETWEEN as.tempo - 0.5 AND as.tempo + 0.5
+  )
+  SELECT a1.artist_name
+  FROM Writes w1
+  JOIN Artists a1 ON a1.artist_id = w1.artist_id
+  JOIN Artist_similar as1 ON w1.track_id = as1.track_id
+  ORDER BY a1.artist_id
+  LIMIT 5;
   `;
 
-  connection.query(query, (err, data) => {
+  connection.query(query, artist_name, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json([]);
