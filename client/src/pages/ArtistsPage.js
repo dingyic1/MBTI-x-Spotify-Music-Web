@@ -6,7 +6,7 @@ const config = require("../config.json");
 
 export default function ArtistsPage() {
   const [artists, setArtists] = useState([]);
-
+  const [selectedartistId, setSelectedartistId] = useState(null);
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/artists/song_counts`)
       .then((res) => res.json())
@@ -17,8 +17,19 @@ export default function ArtistsPage() {
     {
       field: "artist_name",
       headerName: "Artist Name",
+      renderCell: (row) => (
+        <NavLink
+          to={`/artists/${row.artist_id}`}
+          onClick={() => setSelectedartistId(row.artist_id)
+          }
+        >
+          {row.artist_name}
+        </NavLink >
+      ),
     },
+
     {
+
       field: "followers",
       headerName: "Followers",
     },
