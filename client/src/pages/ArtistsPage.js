@@ -6,15 +6,14 @@ const config = require("../config.json");
 
 export default function ArtistsPage() {
   const [artists, setArtists] = useState([]);
-  const [selectedArtistId, setSelectedArtistId] = useState(null);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/artists`)
+    fetch(`http://${config.server_host}:${config.server_port}/artists/song_counts`)
       .then((res) => res.json())
       .then((resJson) => setArtists(resJson));
   }, []);
 
-  const artistColumns = [
+  const artistsumColumns = [
     {
       field: "artist_name",
       headerName: "Artist Name",
@@ -23,6 +22,14 @@ export default function ArtistsPage() {
       field: "followers",
       headerName: "Followers",
     },
+    {
+      field: "artist_popularity",
+      headerName: "Artist Popularity",
+    },
+    {
+      field: "song_count",
+      headerName: "Song Count",
+    },
   ];
 
   return (
@@ -30,8 +37,8 @@ export default function ArtistsPage() {
       <h1>Artists</h1>
       <Divider />
       <LazyTable
-        route={`http://${config.server_host}:${config.server_port}/artists`}
-        columns={artistColumns}
+        route={`http://${config.server_host}:${config.server_port}/artists/song_counts`}
+        columns={artistsumColumns}
       />
     </Container>
   );

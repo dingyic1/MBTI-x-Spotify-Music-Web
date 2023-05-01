@@ -14,7 +14,7 @@ function Homepage() {
   const [selectedSongId, setSelectedSongId] = useState(null);
   const [selectedArtistId, setSelectedArtistId] = useState(null);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
-  
+
 
   useEffect(() => {
     console.log("useEffect called");
@@ -45,7 +45,7 @@ function Homepage() {
     },
     {
       field: "song_count",
-      headerName: "Number of Songs Number of Songs Written by the Artist",
+      headerName: "Number of Songs Written by the Artist",
     },
   ];
 
