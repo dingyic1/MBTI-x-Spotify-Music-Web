@@ -558,7 +558,7 @@ ORDER BY a1.artist_id
 LIMIT 5;
   `;
 
-  connection.query(query, artist_name, (err, data) => {
+  connection.query(query, artist_id, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json([]);
