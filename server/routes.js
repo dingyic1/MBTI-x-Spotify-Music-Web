@@ -157,6 +157,7 @@ const num_songs_artist = async function (req, res) {
                     ON a.artist_id = w.artist_id
                     JOIN Tracks t
                     ON w.track_id = t.track_id
+                    Group by a.artist_name
                     WHERE a.artist_id = ?; `,
     artist_id,
     (err, data) => {
@@ -175,21 +176,22 @@ const num_songs_counts = async function (req, res) {
   // Return all information about all artists and the total number of songs they have written
   connection.query(
     `SELECT a.artist_name,
-                    a.artist_popularity,
-                    a.followers,
-                    COUNT(t.track_id) AS song_count
-                    FROM Artists a
-                    JOIN Writes w
-                    ON a.artist_id = w.artist_id
-                    JOIN Tracks t
-                    ON w.track_id = t.track_id;
+    a.artist_popularity,
+    a.followers,
+    COUNT(t.track_id) AS song_count
+    FROM Artists a
+    JOIN Writes w
+    ON a.artist_id = w.artist_id
+    JOIN Tracks t
+    ON w.track_id = t.track_id
+    Group by a.artist_name;
   `,
     (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
         res.json({});
       } else {
-        console.log(666);
+        console.log();
         res.json(data);
       }
     }

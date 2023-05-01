@@ -33,6 +33,7 @@ app.get("/album_songs/:album_id", routes.album_songs);
 //Route 3
 app.get('/artists', routes.artist);
 app.get("/artist/songs_count/:artist_id", routes.num_songs_artist);
+//Route 6
 app.get("/artists/song_counts", routes.num_songs_counts);
 app.get("/mbti/artists", routes.artists_mbti);
 app.get("/artists/mbti_songs", routes.artist_mbti_songs);
