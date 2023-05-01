@@ -52,6 +52,12 @@ function Homepage() {
     {
       field: "album",
       headerName: "Album_name",
+      renderCell: (row) => (
+        <NavLink to={`/album/${row.album_id}`}
+         onClick={() => setSelectedAlbumId(row.album_id)}>
+          {row.album}
+        </NavLink>
+      ),
     },
     {
       field: "mbti",
@@ -71,6 +77,7 @@ function Homepage() {
           handleClose={() => setSelectedSongId(null)}
         />
       )}
+
       <h1 style={{ margin: "60px 0px" }}>Welcome to the homepage, {mbti}!</h1>
       <h2>1. Songs for MBTI type: {mbti}</h2>
       <ul style={{ marginBottom: "50px" }}>
