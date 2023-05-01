@@ -151,7 +151,7 @@ const num_songs_artist = async function (req, res) {
                     FROM Artists a
                     JOIN Writes w
                     ON a.artist_id = w.artist_id
-                    JOIN Tracks t
+                    JOIN Tracks_MBTIs t
                     ON w.track_id = t.track_id
                     Group by a.artist_name
                     WHERE a.artist_id = ?; `,
@@ -205,7 +205,7 @@ const num_songs_counts = async function (req, res) {
         FROM Artists a
         JOIN Writes w
         ON a.artist_id = w.artist_id
-        JOIN Tracks t
+        JOIN Tracks_MBTIs t
         ON w.track_id = t.track_id
         Group by a.artist_name; `,
       (err, data) => {
@@ -226,7 +226,7 @@ const num_songs_counts = async function (req, res) {
         FROM Artists a
         JOIN Writes w
         ON a.artist_id = w.artist_id
-        JOIN Tracks t
+        JOIN Tracks_MBTIs t
         ON w.track_id = t.track_id
         Group by a.artist_name
         LIMIT ? 
@@ -313,7 +313,7 @@ const mbti_songs = async function (req, res) {
                     # Find a random ISTJ track (song)
                     SELECT t.track_id,
                     t.track_name
-                    FROM Tracks t
+                    FROM Tracks_MBTIs t
                     JOIN track_istj istj
                     ON t.track_id = istj.track_id
                     ORDER BY RAND()
@@ -533,12 +533,12 @@ const similar_artists = async function (req, res) {
         instrumentalness, energy, speechiness,
         acousticness, valence, tempo
     FROM Writes w JOIN Artists a ON a.artist_id = w.artist_id
-        JOIN Tracks t ON w.track_id = t.track_id
+        JOIN Tracks_MBTIs t ON w.track_id = t.track_id
     WHERE a.artist_id = ?
   ),
   Artist_similar AS (
     SELECT t.track_id
-    FROM artist_search as_1, Tracks t
+    FROM artist_search as_1, Tracks_MBTIs t
     WHERE t.danceability BETWEEN as_1.danceability - 0.5 AND as_1.danceability + 0.5
       AND t.energy BETWEEN as_1.energy - 0.5 AND as_1.energy + 0.5
       AND t.loudness BETWEEN as_1.loudness - 0.5 AND as_1.loudness + 0.5
@@ -597,7 +597,7 @@ const search_songs = async function (req, res) {
 
   connection.query(
     `
-    SELECT * FROM Tracks
+    SELECT * FROM Tracks_MBTIs
     WHERE track_name LIKE "%${name}%"
     AND explicit <= ${explicit}
     AND mode <= ${mode}
