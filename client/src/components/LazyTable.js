@@ -48,14 +48,6 @@ export default function LazyTable({
     return <div>{row[col.field]}</div>;
   };
 
-  const styles = (theme) => ({
-    tableRow: {
-      "&:hover": {
-        backgroundColor: "blue !important",
-      },
-    },
-  });
-
   return (
     <TableContainer>
       <Table>
@@ -77,7 +69,7 @@ export default function LazyTable({
         </TableHead>
         <TableBody>
           {data.map((row, idx) => (
-            <TableRow key={idx} className={styles.tableRow}>
+            <TableRow key={idx}>
               {columns.map((col) => (
                 <TableCell
                   key={col.headerName}

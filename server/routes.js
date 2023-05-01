@@ -571,17 +571,18 @@ LIMIT 5;
 // Route 15: GET /search_songs
 // Given an artist_name, return similar artists based on the features of the songs written by that artist.
 const search_songs = async function (req, res) {
+  const mbti = req.query.mbti ?? "";
   const name = req.query.name ?? "";
   const explicit = req.query.explicit === "true" ? 1 : 0;
   const mode = req.query.mode === "true" ? 1 : 0;
-  const durationLow = req.query.duration_low ?? 60;
-  const durationHigh = req.query.duration_high ?? 660;
+  const durationLow = req.query.duration_low ?? 0;
+  const durationHigh = req.query.duration_high ?? 10000000;
   const danceabilityLow = req.query.danceability_low ?? 0;
   const danceabilityHigh = req.query.danceability_high ?? 1;
   const energyLow = req.query.energy_low ?? 0;
   const energyHigh = req.query.energy_high ?? 1;
   const loudnessLow = req.query.loudness_low ?? -60;
-  const loudnessHigh = req.query.loudness_high ?? 6;
+  const loudnessHigh = req.query.loudness_high ?? 10;
   const speechinessLow = req.query.speechiness_low ?? 0;
   const speechinessHigh = req.query.speechiness_high ?? 1;
   const acousticnessLow = req.query.acousticness_low ?? 0;
@@ -593,12 +594,13 @@ const search_songs = async function (req, res) {
   const valenceLow = req.query.valence_low ?? 0;
   const valenceHigh = req.query.valence_high ?? 1;
   const tempoLow = req.query.tempo_low ?? 0;
-  const tempoHigh = req.query.tempo_high ?? 247;
+  const tempoHigh = req.query.tempo_high ?? 300;
 
   connection.query(
     `
     SELECT * FROM Tracks_MBTIs
     WHERE track_name LIKE "%${name}%"
+    AND mbti LIKE "%${mbti}%"
     AND explicit <= ${explicit}
     AND mode <= ${mode}
     AND duration_ms BETWEEN ${durationLow} AND ${durationHigh}
