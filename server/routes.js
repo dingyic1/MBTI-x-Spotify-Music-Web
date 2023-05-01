@@ -522,7 +522,7 @@ ORDER BY tmf.release_date;
   });
 };
 
-// Route 14: GET /artist/similar
+// Route 14: GET /artists/similar
 // Given an artist_name, return similar artists based on the features of the songs written by that artist.
 const similar_artists = async function (req, res) {
   const artist_name = req.query.artist_name;
@@ -550,7 +550,7 @@ const similar_artists = async function (req, res) {
       AND t.valence BETWEEN as_1.valence - 0.5 AND as_1.valence + 0.5
       AND t.tempo BETWEEN as_1.tempo - 0.5 AND as_1.tempo + 0.5
   )
-SELECT a1.artist_name
+SELECT distinct a1.artist_name
 FROM Writes w1
 JOIN Artists a1 ON a1.artist_id = w1.artist_id
 JOIN Artist_similar as1 ON w1.track_id = as1.track_id

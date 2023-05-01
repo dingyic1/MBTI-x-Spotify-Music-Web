@@ -14,7 +14,7 @@ export default function ArtistInfoPage() {
     fetch(`http://${config.server_host}:${config.server_port}/artists/similar/${artist_name}`)
       .then((res) => res.json())
       .then((resJson) => setartistData(resJson));
-  }, []);
+  }, [artist_name]);
 
   async function fetchSimilarArtists() {
     const response = await fetch(
@@ -28,12 +28,12 @@ export default function ArtistInfoPage() {
     <Container className="custom-font">
       <h1>{artistData.artist_name}</h1>
       <h2>
-        Album:&nbsp;
+        Artist:&nbsp;
         <NavLink to={`/album/${artistData.artist_id}`}>
           {artistData.artist}
         </NavLink>
       </h2>
-      <h3>Similar Artists</h3>
+      <h3>Similar Artists:</h3>
       <ul>
         {similarArtists.map((artist) => (
           <li key={artist.artist_id}>
