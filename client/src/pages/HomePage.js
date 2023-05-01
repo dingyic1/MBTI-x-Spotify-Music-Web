@@ -15,7 +15,6 @@ function Homepage() {
   const [selectedArtistId, setSelectedArtistId] = useState(null);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
 
-
   useEffect(() => {
     console.log("useEffect called");
     fetchSongsRecommend();
@@ -72,13 +71,13 @@ function Homepage() {
           handleClose={() => setSelectedSongId(null)}
         />
       )}
-      <h1>Welcome to the homepage, {mbti}!</h1>
-      <Divider />
+      <h1 style={{ margin: "60px 0px" }}>Welcome to the homepage, {mbti}!</h1>
       <h2>1. Songs for MBTI type: {mbti}</h2>
-      <ul>
+      <ul style={{ marginBottom: "50px" }}>
         {songs.map((song) => (
           <li>
             <NavLink
+              style={{ color: "black" }}
               to={`/song/${song.track_id}`}
               onClick={() => setSelectedSongId(song.track_id)}
             >
@@ -87,13 +86,11 @@ function Homepage() {
           </li>
         ))}
       </ul>
-      <Divider />
       <h2>2. Artists for you: {mbti}</h2>
       <LazyTable
         route={`http://${config.server_host}:${config.server_port}/${mbti}/artist_counts`}
         columns={artistColumns}
       />
-      <Divider />
       <h2>3. Albums for you: {mbti}</h2>
       <LazyTable
         route={`http://${config.server_host}:${config.server_port}/${mbti}/album_counts`}

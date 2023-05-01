@@ -58,9 +58,7 @@ export default function AlbumInfoPage() {
       <h1>{songData.track_name}</h1>
       <h2>
         Album:&nbsp;
-        <NavLink to={`/album/${albumData.album_id}`}>
-          {albumData.album}
-        </NavLink>
+        <NavLink to={`/album/${albumData.album_id}`}>{albumData.album}</NavLink>
       </h2>
       <p>Duration: {formatDuration(songData.duration_ms)}</p>
       <p>Tempo: {songData.tempo} bpm</p>
@@ -89,6 +87,7 @@ export default function AlbumInfoPage() {
                 <li key={song.track_id}>
                   <ul>
                     <NavLink
+                      style={{ textDecoration: "none" }}
                       to={`/song/${song.track_id}`}
                       onClick={() => setSelectedSongId(song.track_id)}
                     >

@@ -1,6 +1,7 @@
 .custom-font {
     font-family: 'Sigmar', cursive;
 }
+
 .navbar {
   font-family: 'Sigmar', cursive;
   text-decoration: none;
@@ -17,4 +18,8 @@
   font-size: 100px;
   margin: 0;
   padding: 0;
+}
+
+.table-link {
+  color: black;
 }
