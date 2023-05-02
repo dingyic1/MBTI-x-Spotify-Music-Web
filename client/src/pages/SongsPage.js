@@ -11,18 +11,15 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-import SongCard from "../components/SongCard";
 import { formatDuration } from "../helpers/formatter";
 const config = require("../config.json");
 
 export default function SongsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [data, setData] = useState([]);
-  const [selectedSongId, setSelectedSongId] = useState(null);
 
   const [title, setTitle] = useState("");
-  const [duration, setDuration] = useState([60, 660]);
-  const [plays, setPlays] = useState([0, 1100000000]);
+  const [duration, setDuration] = useState([0, 10000000]);
   const [danceability, setDanceability] = useState([0, 1]);
   const [energy, setEnergy] = useState([0, 1]);
   const [valence, setValence] = useState([0, 1]);
@@ -33,7 +30,7 @@ export default function SongsPage() {
       .then((res) => res.json())
       .then((resJson) => {
         const songsWithId = resJson.map((song) => ({
-          id: song.song_id,
+          id: song.track_id,
           ...song,
         }));
         setData(songsWithId);
@@ -42,18 +39,12 @@ export default function SongsPage() {
 
   const search = () => {
     fetch(
-      `http://${config.server_host}:${config.server_port}/search_songs?title=${title}` +
-        `&duration_low=${duration[0]}&duration_high=${duration[1]}` +
-        `&plays_low=${plays[0]}&plays_high=${plays[1]}` +
-        `&danceability_low=${danceability[0]}&danceability_high=${danceability[1]}` +
-        `&energy_low=${energy[0]}&energy_high=${energy[1]}` +
-        `&valence_low=${valence[0]}&valence_high=${valence[1]}` +
-        `&explicit=${explicit}`
+      `http://${config.server_host}:${config.server_port}/search_songs?name=${title}`
     )
       .then((res) => res.json())
       .then((resJson) => {
         const songsWithId = resJson.map((song) => ({
-          id: song.song_id,
+          id: song.track_id,
           ...song,
         }));
         setData(songsWithId);
@@ -62,17 +53,12 @@ export default function SongsPage() {
 
   const columns = [
     {
-      field: "title",
-      headerName: "Title",
+      field: "track_name",
+      headerName: "Track Name",
       width: 300,
-      renderCell: (params) => (
-        <Link onClick={() => setSelectedSongId(params.row.song_id)}>
-          {params.value}
-        </Link>
-      ),
     },
+    { field: "mbti", headerName: "MBTI" },
     { field: "duration", headerName: "Duration" },
-    { field: "plays", headerName: "Plays" },
     { field: "danceability", headerName: "Danceability" },
     { field: "energy", headerName: "Energy" },
     { field: "valence", headerName: "Valence" },
@@ -83,23 +69,17 @@ export default function SongsPage() {
 
   return (
     <Container>
-      {selectedSongId && (
-        <SongCard
-          songId={selectedSongId}
-          handleClose={() => setSelectedSongId(null)}
-        />
-      )}
       <h2>Search Songs</h2>
       <Grid container spacing={6}>
         <Grid item xs={8}>
           <TextField
-            label="Title"
+            label=""
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             style={{ width: "100%" }}
           />
         </Grid>
-        <Grid item xs={4}>
+        {/* <Grid item xs={4}>
           <FormControlLabel
             label="Explicit"
             control={
@@ -169,7 +149,7 @@ export default function SongsPage() {
             valueLabelDisplay="auto"
             valueLabelFormat={(value) => <div>{value}</div>}
           />
-        </Grid>
+        </Grid> */}
       </Grid>
       <Button
         onClick={() => search()}
