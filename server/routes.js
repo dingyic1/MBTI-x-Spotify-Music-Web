@@ -198,7 +198,8 @@ const num_songs_counts = async function (req, res) {
   const pageSize = req.query.page_size ?? 10;
   if (!page) {
     connection.query(
-      `SELECT a.artist_id, a.artist_name,
+      `SELECT a.artist_id, 
+        a.artist_name,
         a.artist_popularity,
         a.followers,
         COUNT(t.track_id) AS song_count
@@ -219,7 +220,8 @@ const num_songs_counts = async function (req, res) {
     );
   } else {
     connection.query(
-      `SELECT a.artist_id, a.artist_name,
+      `SELECT a.artist_id, 
+        a.artist_name,
         a.artist_popularity,
         a.followers,
         COUNT(t.track_id) AS song_count
@@ -460,9 +462,17 @@ const album_mbti_song_counts = async function (req, res) {
   const pageSize = req.query.page_size ?? 10;
   if (!page) {
     const query = `
-    SELECT a.album_id,a.album,tmf.mbti,COUNT(*) as song_count
-    FROM Albums a JOIN Tracks_MBTIs tmf ON a.album_id = tmf.album_id WHERE tmf.mbti = ?
-          GROUP BY a.album_id, a.album, tmf.mbti
+    SELECT a.album_id,
+           a.album,
+           tmf.mbti,
+           COUNT(*) as song_count
+     FROM Albums a 
+        JOIN Tracks_MBTIs tmf 
+             ON a.album_id = tmf.album_id 
+        WHERE tmf.mbti = ?
+          GROUP BY a.album_id, 
+                   a.album, 
+                   tmf.mbti
           ORDER BY song_count DESC;
     `;
 
@@ -476,10 +486,18 @@ const album_mbti_song_counts = async function (req, res) {
     });
   } else {
     const query = `
-    SELECT a.album_id,a.album,tmf.mbti,COUNT(*) as song_count
-    FROM Albums a JOIN Tracks_MBTIs tmf ON a.album_id = tmf.album_id WHERE tmf.mbti = ?
-          GROUP BY a.album_id, a.album, tmf.mbti
-          ORDER BY song_count DESC
+    SELECT a.album_id,
+           a.album,
+           tmf.mbti,
+           COUNT(*) as song_count
+    FROM Albums a 
+    JOIN Tracks_MBTIs tmf 
+        ON a.album_id = tmf.album_id 
+      WHERE tmf.mbti = ?
+    GROUP BY a.album_id, 
+             a.album, 
+             tmf.mbti
+    ORDER BY song_count DESC
     LIMIT ? 
     OFFSET ?;
   `;

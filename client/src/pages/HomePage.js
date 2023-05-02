@@ -67,7 +67,7 @@ function Homepage() {
     },
     {
       field: "song_count",
-      headerName: "Number of Albums Written by the Artist",
+      headerName: "Number of Songs in the Album",
     },
   ];
 
