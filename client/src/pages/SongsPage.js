@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-import { formatDuration } from "../helpers/formatter";
 const config = require("../config.json");
 
 export default function SongsPage() {
@@ -62,36 +61,50 @@ export default function SongsPage() {
       headerName: "Track Name",
       width: 300,
     },
-    { field: "mbti", headerName: "MBTI" },
-    { field: "explicit", headerName: "Explicit" },
-    { field: "danceability", headerName: "Danceability" },
-    { field: "energy", headerName: "Energy" },
-    { field: "valence", headerName: "Valence" },
+    { field: "mbti", headerName: "MBTI", flex: 1 },
+    { field: "explicit", headerName: "Explicit", flex: 1 },
+    { field: "danceability", headerName: "Danceability", flex: 1 },
+    { field: "energy", headerName: "Energy", flex: 1 },
+    { field: "valence", headerName: "Valence", flex: 1 },
   ];
 
   return (
     <Container>
-      <h2>Search Songs</h2>
+      <h1 style={{ fontFamily: "Sigmar", margin: "50px 0px" }}>Search Songs</h1>
       <Grid container spacing={6}>
         <Grid item xs={8}>
           <TextField
-            label=""
+            label="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             style={{ width: "100%" }}
+            inputProps={{
+              style: {
+                color: "#8c52ff",
+                backgroundColor: "white",
+                fontFamily: "Sigmar",
+              },
+            }}
           />
         </Grid>
         <Grid item xs={8}>
           <TextField
-            label=""
+            label="MBTI"
             value={mbti}
-            onChange={(e) => setMbti(e.target.value)}
+            onChange={(e) => setMbti(e.target.value.toUpperCase())}
             style={{ width: "100%" }}
+            inputProps={{
+              style: {
+                color: "#8c52ff",
+                backgroundColor: "white",
+                fontFamily: "Sigmar",
+              },
+            }}
           />
         </Grid>
         <Grid item xs={4}>
           <FormControlLabel
-            label="Explicit"
+            label={<span style={{ fontFamily: "Sigmar" }}>Explicit</span>}
             control={
               <Checkbox
                 checked={explicit}
@@ -101,7 +114,7 @@ export default function SongsPage() {
           />
         </Grid>
         <Grid item xs={4}>
-          <p>Danceability</p>
+          <p style={{ fontFamily: "Sigmar" }}>Danceability</p>
           <Slider
             value={danceability}
             min={0}
@@ -113,7 +126,7 @@ export default function SongsPage() {
           />
         </Grid>
         <Grid item xs={4}>
-          <p>Energy</p>
+          <p style={{ fontFamily: "Sigmar" }}>Energy</p>
           <Slider
             value={energy}
             min={0}
@@ -125,7 +138,7 @@ export default function SongsPage() {
           />
         </Grid>
         <Grid item xs={4}>
-          <p>Valence</p>
+          <p style={{ fontFamily: "Sigmar" }}>Valence</p>
           <Slider
             value={valence}
             min={0}
@@ -139,11 +152,18 @@ export default function SongsPage() {
       </Grid>
       <Button
         onClick={() => search()}
-        style={{ left: "50%", transform: "translateX(-50%)" }}
+        style={{
+          left: "50%",
+          transform: "translateX(-50%)",
+          marginTop: "20px",
+          color: "#8c52ff",
+          backgroundColor: "white",
+          fontFamily: "Sigmar",
+        }}
       >
         Search
       </Button>
-      <h2>Results</h2>
+      <h1 style={{ fontFamily: "Sigmar", margin: "50px 0px" }}>Results</h1>
       <DataGrid
         rows={data}
         columns={columns}
@@ -151,6 +171,7 @@ export default function SongsPage() {
         rowsPerPageOptions={[5, 10, 25]}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         autoHeight
+        style={{ fontFamily: "Sigmar" }}
       />
     </Container>
   );

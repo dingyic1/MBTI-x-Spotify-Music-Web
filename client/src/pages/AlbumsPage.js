@@ -37,7 +37,7 @@ export default function AlbumsPage() {
 
   return (
     <Container>
-      <h1>Albums</h1>
+      <h1 style={{ fontFamily: "Sigmar", margin: "50px 0px" }}>Albums</h1>
       <Divider />
       <LazyTable
         route={`http://${config.server_host}:${config.server_port}/albums`}
