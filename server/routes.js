@@ -547,7 +547,7 @@ const similar_artists = async function (req, res) {
         acousticness, valence, tempo
     FROM Writes w JOIN Artists a ON a.artist_id = w.artist_id
         JOIN Tracks_MBTIs t ON w.track_id = t.track_id
-    WHERE a.artist_id = '007nYTXRhZJUZGH7ct5Y3v'
+    WHERE a.artist_id = ?
 ),
 Artist_similar AS (
     SELECT t.track_id
@@ -564,7 +564,7 @@ Artist_similar AS (
         AND ABS(t.valence - as_1.valence) <= 0.5
         AND ABS(t.tempo - as_1.tempo) <= 0.5
 )
-SELECT a1.artist_id, a1.artist_name
+SELECT DISTINCT a1.artist_id, a1.artist_name
 FROM Writes w1
 JOIN Artists a1 ON a1.artist_id = w1.artist_id
 JOIN Artist_similar as1 ON w1.track_id = as1.track_id
