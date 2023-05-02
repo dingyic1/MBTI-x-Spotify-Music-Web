@@ -33,9 +33,12 @@ function Homepage() {
       field: "artist_name",
       headerName: "Artist_name",
       renderCell: (row) => (
-        <Link onClick={() => setSelectedArtistId(row.artist_id)}>
-          {row.artist_name}
-        </Link>
+        <NavLink
+        to={`/artist/${row.artist_id}`}
+        onClick={() => setSelectedAlbumId(row.artist_id)}
+      >
+        {row.artist_name}
+      </NavLink>
       ),
     },
     {
