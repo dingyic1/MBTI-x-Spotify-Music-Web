@@ -8,10 +8,15 @@ export default function ArtistInfoPage() {
   const { artist_id } = useParams();
 
   const [similarArtists, setSimilarArtists] = useState([]);
-  const [artistData, setArtistData] = useState(null);
+  const [artistData, setArtistData] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    fetch(
+        `http://${config.server_host}:${config.server_port}/artist/${artist_id}`)
+        .then((res) => res.json())
+        .then((resJson) => setArtistData(resJson));
+    
     fetch(`http://${config.server_host}:${config.server_port}/artists/similar/${artist_id}`)
       .then((res) => {
         if (!res.ok) {
@@ -20,7 +25,7 @@ export default function ArtistInfoPage() {
         return res.json();
       })
       .then((resJson) => {
-        console.log("Artist data:", resJson);
+        console.log(artist_id);
         setSimilarArtists(resJson);
       })
       .catch((err) => {
@@ -29,49 +34,21 @@ export default function ArtistInfoPage() {
       });
   }, [artist_id]);
 
-//   useEffect(() => {
-//     if (artistData) {
-//       fetch(`http://${config.server_host}:${config.server_port}/similar_artists?artist_id=${artistData.artist_id}`)
-//         .then((res) => {
-//           if (!res.ok) {
-//             throw new Error("Error fetching similar artists data");
-//           }
-//           return res.json();
-//         })
-//         .then((resJson) => {
-//           console.log("Similar artists data:", resJson);
-//           setSimilarArtists(resJson);
-//         })
-//         .catch((err) => {
-//           console.error(err);
-//           setError(err.message);
-//         });
-//     }
-//   }, [artistData]);
-
-//   if (error) {
-//     return <div>Error: {error}</div>;
-//   }
-
-//   if (!artistData) {
-//     return <div>Loading...</div>;
-//   }
-
   return (
     <Container className="custom-font">
-        <h1>AAA</h1>
-      {/* <h1>{artistData.artist_name}</h1> */}
-      {/* <h2>
+      <h2>
         Artist:&nbsp;
-        <NavLink to={`/album/${artistData.artist_id}`}>
+        <NavLink>
           {artistData.artist_name}
         </NavLink>
-      </h2> */}
+      </h2>
       <h3>Similar Artists:</h3>
       <ul>
         {similarArtists.map((artist) => (
           <li>
-              {artist.artist_name}
+            <NavLink to={`/artist/${artist.artist_id}`}>
+                {artist.artist_name}
+            </NavLink>
           </li>
         ))}
       </ul>

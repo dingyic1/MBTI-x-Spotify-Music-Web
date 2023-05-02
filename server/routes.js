@@ -502,16 +502,17 @@ const album_mbti_song_counts = async function (req, res) {
 // Route 13: GET /artist/mbti_songs
 // Return all artist's songs, corresponding MBTI type for each song, and release year for each song, ordered by release year
 const artist_mbti_songs = async function (req, res) {
+  const artist_id = req.params.artist_id;
   const query = `
-  SELECT artist_id, artist_name FROM Artists WHERE artist.id = ?
+  SELECT artist_id, artist_name FROM Artists WHERE artist_id = ?;
   `;
 
-  connection.query(query, artist_id, (err, data) => {
+  connection.query(query, [artist_id], (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json([]);
     } else {
-      res.json(data);
+      res.json(data[0]);
     }
   });
 };
@@ -544,7 +545,7 @@ const similar_artists = async function (req, res) {
       AND t.valence BETWEEN as_1.valence - 0.5 AND as_1.valence + 0.5
       AND t.tempo BETWEEN as_1.tempo - 0.5 AND as_1.tempo + 0.5
   )
-SELECT distinct a1.artist_name
+SELECT distinct a1.artist_id, a1.artist_name
 FROM Writes w1
 JOIN Artists a1 ON a1.artist_id = w1.artist_id
 JOIN Artist_similar as1 ON w1.track_id = as1.track_id
