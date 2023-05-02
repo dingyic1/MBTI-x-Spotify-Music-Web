@@ -53,8 +53,10 @@ function Homepage() {
       field: "album",
       headerName: "Album_name",
       renderCell: (row) => (
-        <NavLink to={`/album/${row.album_id}`}
-         onClick={() => setSelectedAlbumId(row.album_id)}>
+        <NavLink
+          to={`/album/${row.album_id}`}
+          onClick={() => setSelectedAlbumId(row.album_id)}
+        >
           {row.album}
         </NavLink>
       ),
@@ -84,7 +86,6 @@ function Homepage() {
         {songs.map((song) => (
           <li>
             <NavLink
-              style={{ color: "black" }}
               to={`/song/${song.track_id}`}
               onClick={() => setSelectedSongId(song.track_id)}
             >
