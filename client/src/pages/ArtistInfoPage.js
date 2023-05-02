@@ -32,7 +32,7 @@ export default function ArtistInfoPage() {
 
   return (
     <Container className="custom-font">
-      <h2>Artist:{artistData.artist_name}</h2>
+      <h2>Artist: {artistData.artist_name}</h2>
       <ButtonGroup>
         <Button onClick={handleSimilarArtistsClick}>Search Similar Artists</Button>
       </ButtonGroup>
