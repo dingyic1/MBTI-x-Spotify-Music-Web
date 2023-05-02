@@ -664,39 +664,25 @@ const album_songs = async function (req, res) {
 const album_mbti_percentage = async function (req, res) {
   const album_id = req.params.album_id;
   connection.query(
-    `WITH album_song_counts AS (
-      SELECT
-          a.album_id,
-          a.album,
-          t.mbti,
-          COUNT(t.track_id) AS number_of_songs
-      FROM
-          Tracks_MBTIs t
-          JOIN Albums a ON t.album_id = a.album_id
-      WHERE a.album_id = ?
-      GROUP BY
-          a.album_id, a.album, t.mbti
-  ),
-  
-  total_songs_in_album AS (
-      SELECT
-          album_id,
-          COUNT(*) AS total
-      FROM
-          Tracks_MBTIs
-      GROUP BY
-          album_id
-  )
-  
-  SELECT
-      asc_alias.album,
-      asc_alias.mbti,
-      (asc_alias.number_of_songs * 100.0 / tsia.total) AS percentage
-  FROM
-      album_song_counts asc_alias
-      JOIN total_songs_in_album tsia ON asc_alias.album_id = tsia.album_id
-  ORDER BY
-      asc_alias.album_id, asc_alias.mbti;`,
+    `SELECT
+    a.album,
+    t.mbti,
+    (COUNT(t.track_id) * 100.0 / (
+        SELECT
+            COUNT(*)
+        FROM
+            Tracks_MBTIs t2
+        WHERE
+            t2.album_id = a.album_id
+    )) AS percentage
+FROM
+    Tracks_MBTIs t
+    JOIN Albums a ON t.album_id = a.album_id
+    AND a.album_id = ?
+GROUP BY
+    a.album_id, a.album, t.mbti
+ORDER BY
+    a.album_id, t.mbti;`,
     [album_id],
     (err, data) => {
       if (err || data.length === 0) {
