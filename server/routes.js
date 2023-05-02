@@ -517,7 +517,7 @@ const album_mbti_song_counts = async function (req, res) {
   }
 };
 
-// Route 13: GET /artist/mbti_songs
+// Route 13: GET /artist/:artist_id
 // Return all artist's songs, corresponding MBTI type for each song, and release year for each song, ordered by release year
 const artist_mbti_songs = async function (req, res) {
   const artist_id = req.params.artist_id;
