@@ -19,7 +19,7 @@ export default function SongsPage() {
   const [data, setData] = useState([]);
 
   const [title, setTitle] = useState("");
-  const [duration, setDuration] = useState([0, 10000000]);
+  const [mbti, setMbti] = useState("");
   const [danceability, setDanceability] = useState([0, 1]);
   const [energy, setEnergy] = useState([0, 1]);
   const [valence, setValence] = useState([0, 1]);
@@ -39,7 +39,12 @@ export default function SongsPage() {
 
   const search = () => {
     fetch(
-      `http://${config.server_host}:${config.server_port}/search_songs?name=${title}`
+      `http://${config.server_host}:${config.server_port}/search_songs?name=${title}` +
+        `&mbti=${mbti}` +
+        `&danceability_low=${danceability[0]}&danceability_high=${danceability[1]}` +
+        `&energy_low=${energy[0]}&energy_high=${energy[1]}` +
+        `&valence_low=${valence[0]}&valence_high=${valence[1]}` +
+        `&explicit=${explicit}`
     )
       .then((res) => res.json())
       .then((resJson) => {
@@ -58,13 +63,10 @@ export default function SongsPage() {
       width: 300,
     },
     { field: "mbti", headerName: "MBTI" },
-    { field: "duration", headerName: "Duration" },
+    { field: "explicit", headerName: "Explicit" },
     { field: "danceability", headerName: "Danceability" },
     { field: "energy", headerName: "Energy" },
     { field: "valence", headerName: "Valence" },
-    { field: "tempo", headerName: "Tempo" },
-    { field: "key_mode", headerName: "Key" },
-    { field: "explicit", headerName: "Explicit" },
   ];
 
   return (
@@ -79,7 +81,15 @@ export default function SongsPage() {
             style={{ width: "100%" }}
           />
         </Grid>
-        {/* <Grid item xs={4}>
+        <Grid item xs={8}>
+          <TextField
+            label=""
+            value={mbti}
+            onChange={(e) => setMbti(e.target.value)}
+            style={{ width: "100%" }}
+          />
+        </Grid>
+        <Grid item xs={4}>
           <FormControlLabel
             label="Explicit"
             control={
@@ -90,28 +100,16 @@ export default function SongsPage() {
             }
           />
         </Grid>
-        <Grid item xs={6}>
-          <p>Duration</p>
+        <Grid item xs={4}>
+          <p>Danceability</p>
           <Slider
-            value={duration}
-            min={60}
-            max={660}
-            step={10}
-            onChange={(e, newValue) => setDuration(newValue)}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => <div>{formatDuration(value)}</div>}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <p>Plays (millions)</p>
-          <Slider
-            value={plays}
+            value={danceability}
             min={0}
-            max={1100000000}
-            step={10000000}
-            onChange={(e, newValue) => setPlays(newValue)}
+            max={1}
+            step={0.01}
+            onChange={(e, newValue) => setDanceability(newValue)}
             valueLabelDisplay="auto"
-            valueLabelFormat={(value) => <div>{value / 1000000}</div>}
+            valueLabelFormat={(value) => <div>{value}</div>}
           />
         </Grid>
         <Grid item xs={4}>
@@ -138,18 +136,6 @@ export default function SongsPage() {
             valueLabelFormat={(value) => <div>{value}</div>}
           />
         </Grid>
-        <Grid item xs={4}>
-          <p>Danceability</p>
-          <Slider
-            value={danceability}
-            min={0}
-            max={1}
-            step={0.01}
-            onChange={(e, newValue) => setDanceability(newValue)}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => <div>{value}</div>}
-          />
-        </Grid> */}
       </Grid>
       <Button
         onClick={() => search()}
