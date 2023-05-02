@@ -44,7 +44,7 @@ function Homepage() {
     },
     {
       field: "song_count",
-      headerName: "Number of Songs Written by the Artist",
+      headerName: "Number of Songs for this Mbti Written by the Artist",
     },
   ];
 
