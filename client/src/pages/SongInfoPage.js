@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { Container, Button, ButtonGroup } from "@mui/material";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis } from "recharts";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
 
 import { formatDuration, formatReleaseDate } from "../helpers/formatter";
 import "../styles/stylesheet.css";
@@ -53,9 +60,49 @@ export default function AlbumInfoPage() {
     { name: "Instrumentalness", value: songData.instrumentalness },
   ];
 
+  const getIntroOfPage = (label) => {
+    if (label === "Danceability") {
+      return "How suitable a song is for dancing";
+    }
+    if (label === "Energy") {
+      return "How intense and active a song is";
+    }
+    if (label === "Valence") {
+      return "How positive a song sounds";
+    }
+    if (label === "Liveness") {
+      return "Detects live audience in a song";
+    }
+    if (label === "Instrumentalness") {
+      return "Proportion of instrumental parts in a song";
+    }
+    return "";
+  };
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <p
+            className="intro"
+            style={{
+              color: "#8884d8",
+              backgroundColor: "rgba(255,255,255,.8)",
+              padding: "6px",
+            }}
+          >
+            {getIntroOfPage(label)}
+          </p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
-    <Container className="custom-font">
-      <h1 style={{ margin: "50px 0px" }}>{songData.track_name}</h1>
+    <Container className="custom-font" style={{ color: "#666666" }}>
+      <h1 style={{ color: "black" }}>{songData.track_name}</h1>
       <h2>
         Album:&nbsp;
         <NavLink to={`/album/${albumData.album_id}`}>{albumData.album}</NavLink>
@@ -74,7 +121,7 @@ export default function AlbumInfoPage() {
             fontFamily: "Sigmar",
           }}
         >
-          Bar
+          Song Features
         </Button>
         <Button
           disabled={!barRadar}
@@ -86,7 +133,7 @@ export default function AlbumInfoPage() {
             fontFamily: "Sigmar",
           }}
         >
-          most Related 5 Songs
+          Top 5 Related Songs
         </Button>
       </ButtonGroup>
       <div style={{ margin: 20 }}>
@@ -95,27 +142,37 @@ export default function AlbumInfoPage() {
             <BarChart data={chartData} layout="vertical" margin={{ left: 100 }}>
               <XAxis type="number" domain={[0, 1]} />
               <YAxis type="category" dataKey="name" />
+              <Tooltip
+                content={<CustomTooltip />}
+                wrapperStyle={{ outline: "none" }}
+              />
               <Bar dataKey="value" stroke="#8884d8" fill="#8C52FF" />
             </BarChart>
           </ResponsiveContainer>
         ) : (
-          <ResponsiveContainer height={500}>
-            <ul>
-              {similarSongs.map((song) => (
-                <li key={song.track_id}>
-                  <ul>
-                    <NavLink
-                      style={{ textDecoration: "none" }}
-                      to={`/song/${song.track_id}`}
-                      onClick={() => setSelectedSongId(song.track_id)}
-                    >
-                      {song.track_name}
-                    </NavLink>
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </ResponsiveContainer>
+          <div>
+            <h3 style={{ marginTop: "50px", color: "#666666" }}>
+              These are the songs most similar to "{songData.track_name}"" based
+              on song features
+            </h3>
+            <ResponsiveContainer height={500}>
+              <ul>
+                {similarSongs.map((song) => (
+                  <li key={song.track_id}>
+                    <ul>
+                      <NavLink
+                        style={{ textDecoration: "none" }}
+                        to={`/song/${song.track_id}`}
+                        onClick={() => setSelectedSongId(song.track_id)}
+                      >
+                        {song.track_name}
+                      </NavLink>
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            </ResponsiveContainer>
+          </div>
         )}
       </div>
     </Container>

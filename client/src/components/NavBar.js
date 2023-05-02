@@ -13,6 +13,8 @@ import {
 import { Menu } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
 import styles from "../styles/stylesheet.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMusic } from "@fortawesome/free-solid-svg-icons";
 
 // The hyperlinks in the NavBar contain a lot of repeated formatting code so a
 // helper component NavText local to the file is defined to prevent repeated code.
@@ -47,7 +49,8 @@ export default function NavBar() {
             <Menu />
           </IconButton>
           <NavLink className="navbar" to="/">
-            Music x MBTI
+            <FontAwesomeIcon icon={faMusic} />
+            &nbsp; Music x MBTI
           </NavLink>
         </Toolbar>
       </Container>
