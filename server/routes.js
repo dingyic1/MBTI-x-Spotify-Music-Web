@@ -547,27 +547,27 @@ const similar_artists = async function (req, res) {
         acousticness, valence, tempo
     FROM Writes w JOIN Artists a ON a.artist_id = w.artist_id
         JOIN Tracks_MBTIs t ON w.track_id = t.track_id
-    WHERE a.artist_id = ?
-  ),
-  Artist_similar AS (
+    WHERE a.artist_id = '007nYTXRhZJUZGH7ct5Y3v'
+),
+Artist_similar AS (
     SELECT t.track_id
-    FROM artist_search as_1, Tracks_MBTIs t
-    WHERE t.danceability BETWEEN as_1.danceability - 0.5 AND as_1.danceability + 0.5
-      AND t.energy BETWEEN as_1.energy - 0.5 AND as_1.energy + 0.5
-      AND t.loudness BETWEEN as_1.loudness - 0.5 AND as_1.loudness + 0.5
-      AND t.mode BETWEEN as_1.mode - 0.5 AND as_1.mode + 0.5
-      AND t.speechiness BETWEEN as_1.speechiness - 0.5 AND as_1.speechiness + 0.5
-      AND t.acousticness BETWEEN as_1.acousticness - 0.5 AND as_1.acousticness + 0.5
-      AND t.instrumentalness BETWEEN as_1.instrumentalness - 0.5 AND as_1.instrumentalness + 0.5
-      AND t.liveness BETWEEN as_1.liveness - 0.5 AND as_1.liveness + 0.5
-      AND t.valence BETWEEN as_1.valence - 0.5 AND as_1.valence + 0.5
-      AND t.tempo BETWEEN as_1.tempo - 0.5 AND as_1.tempo + 0.5
-  )
-SELECT distinct a1.artist_id, a1.artist_name
+    FROM artist_search as_1
+    INNER JOIN Tracks_MBTIs t ON
+        ABS(t.danceability - as_1.danceability) <= 0.5
+        AND ABS(t.energy - as_1.energy) <= 0.5
+        AND ABS(t.loudness - as_1.loudness) <= 0.5
+        AND ABS(t.mode - as_1.mode) <= 0.5
+        AND ABS(t.speechiness - as_1.speechiness) <= 0.5
+        AND ABS(t.acousticness - as_1.acousticness) <= 0.5
+        AND ABS(t.instrumentalness - as_1.instrumentalness) <= 0.5
+        AND ABS(t.liveness - as_1.liveness) <= 0.5
+        AND ABS(t.valence - as_1.valence) <= 0.5
+        AND ABS(t.tempo - as_1.tempo) <= 0.5
+)
+SELECT a1.artist_id, a1.artist_name
 FROM Writes w1
 JOIN Artists a1 ON a1.artist_id = w1.artist_id
 JOIN Artist_similar as1 ON w1.track_id = as1.track_id
-ORDER BY a1.artist_id
 LIMIT 5;
   `;
 
