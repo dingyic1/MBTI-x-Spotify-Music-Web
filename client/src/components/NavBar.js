@@ -50,7 +50,7 @@ export default function NavBar() {
           </IconButton>
           <NavLink className="navbar" to="/">
             <FontAwesomeIcon icon={faMusic} />
-            &nbsp; Music x MBTI
+            &nbsp; MBTI x Music
           </NavLink>
         </Toolbar>
       </Container>

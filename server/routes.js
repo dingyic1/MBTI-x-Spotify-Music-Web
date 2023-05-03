@@ -49,58 +49,6 @@ const album = async function (req, res) {
   );
 };
 
-// Route 3: GET /artists
-const artist = async function (req, res) {
-  // Given an artist_id, returns all information about the artist
-  //   const artist_id = req.params.artist_id;
-  //   connection.query(
-  //     `SELECT * FROM Artists WHERE artist_id = ? `,
-  //     artist_id,
-  //     (err, data) => {
-  //       if (err || data.length === 0) {
-  //         console.log(err);
-  //         res.json({});
-  //       } else {
-  //         res.json(data[0]);
-  //       }
-  //     }
-  //   );
-  // };
-
-  const page = req.query.page;
-  const pageSize = req.query.page_size ?? 10;
-  if (!page) {
-    connection.query(
-      `SELECT artist_name, followers
-        FROM Artists; `,
-      (err, data) => {
-        if (err || data.length === 0) {
-          console.log(err);
-          res.json({});
-        } else {
-          res.json(data);
-        }
-      }
-    );
-  } else {
-    connection.query(
-      `SELECT artist_name, followers
-        FROM Artists
-        LIMIT ? 
-        OFFSET ?; `,
-      [pageSize - 0, (page - 1) * pageSize],
-      (err, data) => {
-        if (err || data.length === 0) {
-          console.log(err);
-          res.json({});
-        } else {
-          res.json(data);
-        }
-      }
-    );
-  }
-};
-
 // Route 4: GET /albums
 const albums = async function (req, res) {
   // Show all albums information
@@ -167,32 +115,6 @@ const num_songs_artist = async function (req, res) {
   );
 };
 
-// Route 6: GET /artists/song_counts
-// const num_songs_counts = async function (req, res) {
-//   // Return all information about all artists and the total number of songs they have written
-//   connection.query(
-//     `SELECT a.artist_name,
-//     a.artist_popularity,
-//     a.followers,
-//     COUNT(t.track_id) AS song_count
-//     FROM Artists a
-//     JOIN Writes w
-//     ON a.artist_id = w.artist_id
-//     JOIN Tracks t
-//     ON w.track_id = t.track_id
-//     Group by a.artist_name;
-//   `,
-//     (err, data) => {
-//       if (err || data.length === 0) {
-//         console.log(err);
-//         res.json({});
-//       } else {
-//         console.log();
-//         res.json(data);
-//       }
-//     }
-//   );
-// };
 const num_songs_counts = async function (req, res) {
   const page = req.query.page;
   const pageSize = req.query.page_size ?? 10;
@@ -244,62 +166,6 @@ const num_songs_counts = async function (req, res) {
       }
     );
   }
-};
-
-// Route 7: GET /mbti/artists
-const artists_mbti = async function (req, res) {
-  // Given a MBTI, return the top n artists for that MBTI. For example, we want to find the 5 most relevant artists for ISTJ.
-  const mbti = req.query.mbti ?? "";
-  const num_artist = req.query.num_artist ?? 5;
-
-  connection.query(
-    `SELECT ar.artist_id,ar.artist_name,ar.followers,ar.artist_popularity, COUNT(*) as istj_track_count
-                    FROM Artists ar
-                    JOIN Writes w
-                    ON ar.artist_id = w.artist_id
-                    JOIN Tracks_MBTIs tmbti
-                    ON w.track_id = tmbti.track_id
-                    WHERE tmbti.mbti = ?
-                    GROUP BY ar.artist_id,ar.artist_name,ar.followers,ar.artist_popularity
-                    ORDER BY ar.artist_popularity DESC,COUNT(*) DESC
-                    LIMIT ?;`,
-    [mbti, num_artist],
-    (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json({});
-      } else {
-        console.log(666);
-        res.json(data);
-      }
-    }
-  );
-};
-
-// Route 8: GET /mbti/albums
-const mbti_albums = async function (req, res) {
-  // Given a MBTI, return the top n albums for that MBTI. For example, we want to find the 5 most relevant albums for ISTJ.
-  const mbti = req.query.mbti ?? "";
-  const num_albums = req.query.num_albums ?? 5;
-  connection.query(
-    `SELECT a.album_id,a.album,COUNT(*) as istj_track_count
-                    FROM Albums a JOIN Tracks_MBTIs t
-                    ON a.album_id = t.album_id
-                    WHERE t.mbti = ?
-                    GROUP BY a.album_id, a.album
-                    ORDER BY COUNT(*) DESC, a.album
-                    LIMIT ?;`,
-    [mbti, num_albums],
-    (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json({});
-      } else {
-        console.log(666);
-        res.json(data);
-      }
-    }
-  );
 };
 
 // Route 9: GET :mbti/recommend
@@ -697,14 +563,11 @@ ORDER BY
 };
 
 module.exports = {
-  artist,
   song,
   album,
   num_songs_artist,
   num_songs_counts,
   albums,
-  artists_mbti,
-  mbti_albums,
   mbti_songs,
   similar_songs,
   song_counts,

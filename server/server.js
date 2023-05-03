@@ -25,24 +25,18 @@ app.get("/song/:song_id", routes.song);
 //Album/AlbumInfo Page
 app.get("/album/:album_id", routes.album);
 app.get("/albums", routes.albums);
-app.get("/mbti/albums", routes.mbti_albums);
 app.get("/album_songs/:album_id", routes.album_songs);
 app.get("/album_mbti_percentage/:album_id", routes.album_mbti_percentage);
 
-
-
 //Artist Page
 //Route 3
-app.get('/artists', routes.artist);
 app.get("/artist/songs_count/:artist_id", routes.num_songs_artist);
 //Route 6
 app.get("/artists/song_counts", routes.num_songs_counts);
-app.get("/mbti/artists", routes.artists_mbti);
 app.get("/artist/:artist_id", routes.artist_mbti_songs);
 //ArtistInfo page
 app.get("/artists/similar/:artist_id", routes.similar_artists);
 app.get("/search_songs", routes.search_songs);
-
 
 app.listen(config.server_port, () => {
   console.log(

@@ -72,7 +72,7 @@ function EntryPage() {
               communication and team dynamics.
             </p>
             <p>
-              Don't know your MBTI? Take the free personlity test{" "}
+              Don't know your MBTI? Take the free personality test{" "}
               <a
                 style={{ color: "white" }}
                 href="https://www.16personalities.com/free-personality-test"
