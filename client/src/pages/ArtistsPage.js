@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Divider } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import LazyTable from "../components/LazyTable";
+import CustomTable from "../components/CustomTable";
 const config = require("../config.json");
 
 export default function ArtistsPage() {
@@ -49,7 +49,7 @@ export default function ArtistsPage() {
     <Container>
       <h1 style={{ fontFamily: "Sigmar", margin: "50px 0px" }}>Artists</h1>
       <Divider />
-      <LazyTable
+      <CustomTable
         route={`http://${config.server_host}:${config.server_port}/artists/song_counts`}
         columns={artistsumColumns}
       />

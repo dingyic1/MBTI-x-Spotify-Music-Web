@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import "../styles/stylesheet.css";
 
-export default function LazyTable({
+export default function CustomTable({
   route,
   columns,
   defaultPageSize,

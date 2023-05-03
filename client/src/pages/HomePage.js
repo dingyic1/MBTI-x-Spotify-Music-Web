@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
-import { Container, Divider, Link } from "@mui/material";
+import { Container } from "@mui/material";
 import { NavLink, useParams } from "react-router-dom";
 
-import LazyTable from "../components/LazyTable";
+import CustomTable from "../components/CustomTable";
 import SongInfoPage from "./SongInfoPage";
 import "../styles/stylesheet.css";
-import AlbumInfoPage from "./SongInfoPage";
 const config = require("../config.json");
 
 function Homepage() {
   const { mbti } = useParams();
   const [songs, setSongs] = useState([]);
   const [selectedSongId, setSelectedSongId] = useState(null);
-  const [selectedArtistId, setSelectedArtistId] = useState(null);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
 
   useEffect(() => {
@@ -34,11 +32,11 @@ function Homepage() {
       headerName: "Artist_name",
       renderCell: (row) => (
         <NavLink
-        to={`/artist/${row.artist_id}`}
-        onClick={() => setSelectedAlbumId(row.artist_id)}
-      >
-        {row.artist_name}
-      </NavLink>
+          to={`/artist/${row.artist_id}`}
+          onClick={() => setSelectedAlbumId(row.artist_id)}
+        >
+          {row.artist_name}
+        </NavLink>
       ),
     },
     {
@@ -98,12 +96,12 @@ function Homepage() {
         ))}
       </ul>
       <h2>2. Artists for you: {mbti}</h2>
-      <LazyTable
+      <CustomTable
         route={`http://${config.server_host}:${config.server_port}/${mbti}/artist_counts`}
         columns={artistColumns}
       />
       <h2>3. Albums for you: {mbti}</h2>
-      <LazyTable
+      <CustomTable
         route={`http://${config.server_host}:${config.server_port}/${mbti}/album_counts`}
         columns={albumColumns}
       />

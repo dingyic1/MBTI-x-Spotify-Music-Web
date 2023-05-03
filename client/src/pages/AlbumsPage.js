@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Box, Container, Divider } from "@mui/material";
+import { Container, Divider } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import LazyTable from "../components/LazyTable";
+import CustomTable from "../components/CustomTable";
 
 const config = require("../config.json");
 
@@ -39,7 +39,7 @@ export default function AlbumsPage() {
     <Container>
       <h1 style={{ fontFamily: "Sigmar", margin: "50px 0px" }}>Albums</h1>
       <Divider />
-      <LazyTable
+      <CustomTable
         route={`http://${config.server_host}:${config.server_port}/albums`}
         columns={albumColumns}
       />
