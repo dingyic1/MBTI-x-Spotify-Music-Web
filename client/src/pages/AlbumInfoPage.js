@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import {
   Container,
-  Link,
   Stack,
   Table,
   TableBody,
@@ -10,18 +9,17 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Divider,
 } from "@mui/material";
 import SongInfoPage from "./SongInfoPage";
 import PieChartComponent from "../components/PieChart";
-import { formatDuration, formatReleaseDate } from "../helpers/formatter";
+import { formatDuration } from "../helpers/formatter";
 
 const config = require("../config.json");
 
 export default function AlbumInfoPage() {
   const { album_id } = useParams();
 
-  const [songData, setSongData] = useState([]); // default should actually just be [], but empty object element added to avoid error in template code
+  const [songData, setSongData] = useState([]);
   const [albumData, setAlbumData] = useState([]);
   const [PercentData, setPercentData] = useState([]);
 

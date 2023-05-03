@@ -1,6 +1,7 @@
 # CIS5500-Database-Project
 
-This is CIS 5500 Group 36 project
+This is CIS 5500 Group 36 project: "MBTI x Music"
+By Yichen Ding, Qiao Lu, Erica Sun and Qin Wang
 
 # How to run
 
@@ -9,7 +10,7 @@ This is CIS 5500 Group 36 project
 3. Run npm start in both terminals
 4. Open localhost:3000
 
-# Motivation for the idea/description of the problem the application solves.
+# Description
 
 The Myers-Briggs Type Indicator (MBTI) has become a widely embraced tool for those seeking to gain insight into their own personalities, as well as those of others, with the goal of enhancing interpersonal connections. After discovering a dataset containing Spotify playlists for each of the 16 personalities, our team decided to explore the intersection of the Myer-Briggs personality types and the world of music. By analyzing the features of the songs in each playlist, we were able to identify underlying music taste trends for each personality type. Our website, MBTI x Music, uses the relationship between MBTI and music to recommend songs, albums, and artists to users based on their personality type. Furthermore, it allows users to search songs based on song features such as MBTI, danceability, energy and valence - a functionality that is not available on Spotify.
 
